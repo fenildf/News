@@ -31,6 +31,7 @@ public class AddContactPresenter {
                 @Override
                 public void onSuccess() {
                     Toaster.shortToast(resourceManager.getStringAddContactSuccess());
+                    view.clearFields();
                 }
 
                 @Override
@@ -41,4 +42,9 @@ public class AddContactPresenter {
         }
     }
 
+    public void releasePresenter() {
+        view = null;
+        interactor = null;
+        resourceManager = null;
+    }
 }

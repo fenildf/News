@@ -54,4 +54,18 @@ public class AddContactFragment extends Fragment {
         presenter.onAddButtonClicked(new Contact(name, surname, patronymic, phone, email ));
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        presenter.releasePresenter();
+        presenter = null;
+    }
+
+    public void clearFields() {
+        nameTextView.setText("");
+        surnameTextView.setText("");
+        patronymicTextView.setText("");
+        phoneTextView.setText("");
+        emailTextView.setText("");
+    }
 }

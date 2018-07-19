@@ -13,6 +13,7 @@ public class ContactsPresenter {
 
     public void bindView(MainActivity view){
         this.view = view;
+        onContactsListMenuItemClicked();
     }
 
     public void onContactsListMenuItemClicked(){
@@ -23,4 +24,7 @@ public class ContactsPresenter {
         view.showAddContact();
     }
 
+    public void releasePresenter() {
+        view = null;
+    }
 }

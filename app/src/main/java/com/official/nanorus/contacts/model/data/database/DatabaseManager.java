@@ -7,6 +7,9 @@ import android.util.Log;
 
 import com.official.nanorus.contacts.entity.contact.Contact;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import rx.Emitter;
 import rx.Observable;
 import rx.Scheduler;
@@ -40,14 +43,15 @@ public class DatabaseManager {
         databaseContract = new DatabaseContract();
     }
 
-    public Observable<Contact> getContacts() {
+    public Observable<List<Contact>> getContacts() {
         Log.d(TAG, "getContacts()");
         return Observable.create(contactEmitter -> {
             SQLiteDatabase db = databaseHelper.getReadableDB();
             Cursor cursor = db.rawQuery("SELECT * FROM " + databaseContract.TABLE_NAME_CONTACTS, null);
+            List<Contact> contactList = new ArrayList<>();
             if (cursor.moveToFirst()) {
                 do {
-                    Contact contact = new Contact(
+                    contactList.add(new Contact(
                             cursor.getInt(cursor.getColumnIndex(databaseContract.COLUMN_NAME_ID)),
                             cursor.getString(cursor.getColumnIndex(databaseContract.COLUMN_NAME_CONTACTS_NAME)),
                             cursor.getString(cursor.getColumnIndex(databaseContract.COLUMN_NAME_CONTACTS_SURNAME)),
@@ -55,9 +59,15 @@ public class DatabaseManager {
                             cursor.getString(cursor.getColumnIndex(databaseContract.COLUMN_NAME_CONTACTS_PHONE)),
                             cursor.getString(cursor.getColumnIndex(databaseContract.COLUMN_NAME_CONTACTS_EMAIL)),
                             null
-                    );
-                    contactEmitter.onNext(contact);
+                    ));
+                    if (contactList.size() >= 15) {
+                        contactEmitter.onNext(contactList);
+                        contactList = new ArrayList<>();
+                    }
                 } while (cursor.moveToNext());
+                if (contactList.size() != 0) {
+                    contactEmitter.onNext(contactList);
+                }
             }
             contactEmitter.onCompleted();
             cursor.close();
@@ -72,13 +82,13 @@ public class DatabaseManager {
         if (contact.getName() != null)
             cv.put(databaseContract.COLUMN_NAME_CONTACTS_NAME, contact.getName());
         if (contact.getSurname() != null)
-            cv.put(databaseContract.COLUMN_NAME_CONTACTS_NAME, contact.getSurname());
+            cv.put(databaseContract.COLUMN_NAME_CONTACTS_SURNAME, contact.getSurname());
         if (contact.getPatronymic() != null)
-            cv.put(databaseContract.COLUMN_NAME_CONTACTS_NAME, contact.getPatronymic());
+            cv.put(databaseContract.COLUMN_NAME_CONTACTS_PATRONYMIC, contact.getPatronymic());
         if (contact.getPhone() != null)
-            cv.put(databaseContract.COLUMN_NAME_CONTACTS_NAME, contact.getPhone());
+            cv.put(databaseContract.COLUMN_NAME_CONTACTS_PHONE, contact.getPhone());
         if (contact.getEmail() != null)
-            cv.put(databaseContract.COLUMN_NAME_CONTACTS_NAME, contact.getEmail());
+            cv.put(databaseContract.COLUMN_NAME_CONTACTS_EMAIL, contact.getEmail());
         if (cv.size() > 0) {
             long result = db.insert(databaseContract.TABLE_NAME_CONTACTS, null, cv);
             if (result == -1)

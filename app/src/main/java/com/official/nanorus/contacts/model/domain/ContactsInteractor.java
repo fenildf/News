@@ -4,6 +4,8 @@ import com.official.nanorus.contacts.entity.contact.Contact;
 import com.official.nanorus.contacts.model.data.database.DatabaseManager;
 import com.official.nanorus.contacts.model.repository.ContactsRepository;
 
+import java.util.List;
+
 import rx.Observable;
 
 public class ContactsInteractor {
@@ -22,7 +24,7 @@ public class ContactsInteractor {
         repository = ContactsRepository.getInstance();
     }
 
-    public Observable<Contact> getContacts() {
+    public Observable<List<Contact>> getContacts() {
         return repository.getContacts();
     }
 
