@@ -9,14 +9,31 @@ import com.official.nanorus.contacts.entity.contact.Contact;
 
 import rx.Emitter;
 import rx.Observable;
+import rx.Scheduler;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 
 public class DatabaseManager {
+    private static DatabaseManager instance;
     private DatabaseHelper databaseHelper;
     private DatabaseContract databaseContract;
 
     private final String TAG = this.getClass().getName();
+
+    public interface AddContactListener {
+
+        void onSuccess();
+
+        void onFail();
+
+    }
+
+    public static DatabaseManager getInstance() {
+        if (instance == null)
+            instance = new DatabaseManager();
+        return instance;
+    }
 
     public DatabaseManager() {
         databaseHelper = DatabaseHelper.getInstance();
@@ -48,16 +65,28 @@ public class DatabaseManager {
         }, Emitter.BackpressureMode.BUFFER);
     }
 
-    public void putContact(Contact contact) {
+    public void putContact(Contact contact, AddContactListener addContactListener) {
         Log.d(TAG, "putContact()");
         SQLiteDatabase db = databaseHelper.getWritableDB();
         ContentValues cv = new ContentValues();
-        cv.put(databaseContract.COLUMN_NAME_CONTACTS_NAME, contact.getName());
-        cv.put(databaseContract.COLUMN_NAME_CONTACTS_NAME, contact.getSurname());
-        cv.put(databaseContract.COLUMN_NAME_CONTACTS_NAME, contact.getPatronymic());
-        cv.put(databaseContract.COLUMN_NAME_CONTACTS_NAME, contact.getPhone());
-        cv.put(databaseContract.COLUMN_NAME_CONTACTS_NAME, contact.getEmail());
-        db.insert(databaseContract.TABLE_NAME_CONTACTS, null, cv);
+        if (contact.getName() != null)
+            cv.put(databaseContract.COLUMN_NAME_CONTACTS_NAME, contact.getName());
+        if (contact.getSurname() != null)
+            cv.put(databaseContract.COLUMN_NAME_CONTACTS_NAME, contact.getSurname());
+        if (contact.getPatronymic() != null)
+            cv.put(databaseContract.COLUMN_NAME_CONTACTS_NAME, contact.getPatronymic());
+        if (contact.getPhone() != null)
+            cv.put(databaseContract.COLUMN_NAME_CONTACTS_NAME, contact.getPhone());
+        if (contact.getEmail() != null)
+            cv.put(databaseContract.COLUMN_NAME_CONTACTS_NAME, contact.getEmail());
+        if (cv.size() > 0) {
+            long result = db.insert(databaseContract.TABLE_NAME_CONTACTS, null, cv);
+            if (result == -1)
+                addContactListener.onFail();
+            else
+                addContactListener.onSuccess();
+
+        }
         databaseHelper.closeDB();
         cv.clear();
 

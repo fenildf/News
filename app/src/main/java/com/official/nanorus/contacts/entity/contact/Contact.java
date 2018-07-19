@@ -20,6 +20,16 @@ public class Contact {
         this.image = image;
     }
 
+
+    public Contact(String name, String surname, String patronymic, String phone, String email) {
+        this.name = name;
+        this.surname = surname;
+        this.patronymic = patronymic;
+        this.phone = phone;
+        this.email = email;
+        this.image = image;
+    }
+
     public int getId() {
         return id;
     }
