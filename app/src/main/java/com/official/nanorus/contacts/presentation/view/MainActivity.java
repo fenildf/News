@@ -53,11 +53,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void showContacts(){
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         fragmentTransaction.replace(R.id.frame, contactsListFragment);
         fragmentTransaction.commit();
     }
     public void showAddContact(){
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.replace(R.id.frame, addContactFragment);
         fragmentTransaction.commit();
     }
