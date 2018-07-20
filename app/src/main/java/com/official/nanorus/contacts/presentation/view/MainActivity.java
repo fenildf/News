@@ -23,8 +23,9 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_WRITE_SD = 1;
 
-    public static int MENU_ITEM_CONTACTS_LIST = 0;
-    public static int MENU_ITEM_ADD_CONTACT = 1;
+    public static int FRAGMENT_CONTACTS_LIST = 0;
+    public static int FRAGMENT_ADD_CONTACT = 1;
+    public static String ATTACHED_FRAGMENT_KEY = "fragment";
 
     @BindView(R.id.frame)
     FrameLayout frameLayout;
@@ -41,12 +42,17 @@ public class MainActivity extends AppCompatActivity {
     AddContactFragment addContactFragment;
 
     private int selectedMenuItem = 0;
+    private int attachedFragment = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        if (savedInstanceState != null)
+            attachedFragment = savedInstanceState.getInt(ATTACHED_FRAGMENT_KEY);
+
         setupNavigationDrawer();
 
         contactsListFragment = new ContactsListFragment();
@@ -57,17 +63,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showContacts() {
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
-        fragmentTransaction.replace(R.id.frame, contactsListFragment);
-        fragmentTransaction.commit();
+        if (attachedFragment != FRAGMENT_CONTACTS_LIST) {
+            fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+            fragmentTransaction.replace(R.id.frame, contactsListFragment);
+            fragmentTransaction.commit();
+            attachedFragment = FRAGMENT_CONTACTS_LIST;
+        }
     }
 
     public void showAddContact() {
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        fragmentTransaction.replace(R.id.frame, addContactFragment);
-        fragmentTransaction.commit();
+        if (attachedFragment != FRAGMENT_ADD_CONTACT) {
+            fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            fragmentTransaction.replace(R.id.frame, addContactFragment);
+            fragmentTransaction.commit();
+            attachedFragment = FRAGMENT_ADD_CONTACT;
+        }
     }
 
 
@@ -116,11 +128,11 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.menu_item_contacts:
                     presenter.onContactsListMenuItemClicked();
-                    selectedMenuItem = MENU_ITEM_CONTACTS_LIST;
+                    selectedMenuItem = FRAGMENT_CONTACTS_LIST;
                     break;
                 case R.id.menu_item_add_contact:
                     presenter.onAddContactMenuItemClicked();
-                    selectedMenuItem = MENU_ITEM_ADD_CONTACT;
+                    selectedMenuItem = FRAGMENT_ADD_CONTACT;
                     break;
             }
             drawerLayout.closeDrawers();
@@ -144,8 +156,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setSelectedMenuItem(int item){
+    public void setSelectedMenuItem(int item) {
         selectedMenuItem = item;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(ATTACHED_FRAGMENT_KEY, attachedFragment);
     }
 
     @Override

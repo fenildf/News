@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.official.nanorus.contacts.R;
 import com.official.nanorus.contacts.entity.contact.Contact;
@@ -50,7 +51,9 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactsRe
         String photoUri = resourceManager.getContactPhotoUri(dataList.get(position).getImage());
         Glide.with(holder.itemView.getContext())
                 .load(photoUri)
-                .apply(RequestOptions.circleCropTransform().placeholder(R.drawable.ic_no_photo))
+                .apply(RequestOptions.bitmapTransform(new CircleCrop())
+                       .placeholder(R.drawable.ic_no_photo)
+                )
                 .into(holder.photoImageView);
     }
 

@@ -2,8 +2,9 @@ package com.official.nanorus.contacts.presentation.view;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
@@ -14,19 +15,22 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.official.nanorus.contacts.R;
 import com.official.nanorus.contacts.entity.contact.Contact;
 import com.official.nanorus.contacts.presentation.presenter.AddContactPresenter;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -36,17 +40,20 @@ import butterknife.OnClick;
 
 public class AddContactFragment extends Fragment {
 
+    public static final String SAVE_INSTANCE_CONTACT = "contact";
+
+    public final String TAG = this.getClass().getSimpleName();
 
     @BindView(R.id.et_name)
-    TextView nameTextView;
+    EditText nameEditText;
     @BindView(R.id.et_surname)
-    TextView surnameTextView;
+    EditText surnameEditText;
     @BindView(R.id.et_patronymic)
-    TextView patronymicTextView;
+    EditText patronymicEditText;
     @BindView(R.id.et_phone)
-    TextView phoneTextView;
+    EditText phoneEditText;
     @BindView(R.id.et_email)
-    TextView emailTextView;
+    EditText emailEditText;
     @BindView(R.id.iv_photo)
     ImageView photoImageView;
 
@@ -56,20 +63,27 @@ public class AddContactFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_add_contact, null);
         ButterKnife.bind(this, view);
         presenter = new AddContactPresenter();
         presenter.bindView(this);
+
+        if (savedInstanceState != null) {
+            Contact contact = (Contact) savedInstanceState.getSerializable(SAVE_INSTANCE_CONTACT);
+            presenter.onRotate(contact);
+        }
         return view;
     }
 
+
     @OnClick(R.id.btn_add)
     public void onAddClick() {
-        String name = nameTextView.getText().toString();
-        String surname = surnameTextView.getText().toString();
-        String patronymic = patronymicTextView.getText().toString();
-        String phone = phoneTextView.getText().toString();
-        String email = emailTextView.getText().toString();
+        String name = nameEditText.getText().toString();
+        String surname = surnameEditText.getText().toString();
+        String patronymic = patronymicEditText.getText().toString();
+        String phone = phoneEditText.getText().toString();
+        String email = emailEditText.getText().toString();
 
         presenter.onAddButtonClicked(new Contact(name, surname, patronymic, phone, email, null));
     }
@@ -79,19 +93,20 @@ public class AddContactFragment extends Fragment {
         presenter.onImageClick();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        presenter.releasePresenter();
-        presenter = null;
+    public void setFields(Contact contact) {
+        nameEditText.setText(contact.getName());
+        surnameEditText.setText(contact.getSurname());
+        patronymicEditText.setText(contact.getPatronymic());
+        emailEditText.setText(contact.getEmail());
+        phoneEditText.setText(contact.getPhone());
     }
 
     public void clearFields() {
-        nameTextView.setText("");
-        surnameTextView.setText("");
-        patronymicTextView.setText("");
-        phoneTextView.setText("");
-        emailTextView.setText("");
+        nameEditText.setText("");
+        surnameEditText.setText("");
+        patronymicEditText.setText("");
+        phoneEditText.setText("");
+        emailEditText.setText("");
     }
 
     public void chooseImage() {
@@ -99,13 +114,23 @@ public class AddContactFragment extends Fragment {
         startActivityForResult(photoPickerIntent, 100);
     }
 
-    public void setImage(Bitmap image) {
+    public void setImage(String image) {
         Glide.with(this).load(image)
-                .apply(RequestOptions.circleCropTransform().placeholder(R.drawable.ic_launcher_background))
+                .apply(RequestOptions.bitmapTransform(new CircleCrop())
+                        .placeholder(R.drawable.ic_no_photo)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                )
                 .into(photoImageView);
     }
 
-    public void onWriteDbPermissionResult(boolean granded){
+    public void resetImage() {
+        Glide.with(this).load(R.drawable.ic_no_photo)
+                .apply(RequestOptions.bitmapTransform(new CircleCrop()))
+                .into(photoImageView);
+    }
+
+    public void onWriteDbPermissionResult(boolean granded) {
         presenter.onRequestWriteSdPermissionResult(granded);
     }
 
@@ -123,22 +148,51 @@ public class AddContactFragment extends Fragment {
             case 100:
                 if (resultCode == Activity.RESULT_OK) {
                     Uri selectedImage = data.getData();
-                    InputStream imageStream = null;
-                    try {
-                        imageStream = getActivity().getContentResolver().openInputStream(selectedImage);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                    if (selectedImage != null) {
+                        presenter.onImageChosen(getRealPathFromURI(getContext(), selectedImage));
                     }
-                    Rect rect = new Rect();
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.outHeight = 60;
-                    options.outWidth = 60;
-                    options.inSampleSize = 4;
-                    Bitmap image = BitmapFactory.decodeStream(imageStream, rect, options);
-
-                    presenter.onImageChosen(image);
                 }
                 break;
         }
     }
+
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "onDestroy");
+        super.onDestroy();
+        presenter.releasePresenter();
+        presenter = null;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        Log.d(TAG, "onSaveInstanceState");
+        super.onSaveInstanceState(outState);
+        Contact contact = new Contact(nameEditText.getText().toString(), surnameEditText.getText().toString(),
+                patronymicEditText.getText().toString(), phoneEditText.getText().toString(), emailEditText.getText().toString(), null
+        );
+        outState.putSerializable(SAVE_INSTANCE_CONTACT, contact);
+        presenter.saveImage();
+    }
+
+
+    private String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } catch (Exception e) {
+            Log.e(TAG, "getRealPathFromURI Exception : " + e.toString());
+            return "";
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
 }

@@ -7,7 +7,6 @@ import com.official.nanorus.contacts.model.data.ResourceManager;
 import com.official.nanorus.contacts.model.data.Utils;
 import com.official.nanorus.contacts.model.data.database.DatabaseManager;
 import com.official.nanorus.contacts.model.domain.ContactsInteractor;
-import com.official.nanorus.contacts.model.repository.ContactsRepository;
 import com.official.nanorus.contacts.presentation.ui.Toaster;
 import com.official.nanorus.contacts.presentation.view.AddContactFragment;
 
@@ -16,7 +15,7 @@ public class AddContactPresenter {
     private AddContactFragment view;
     private ContactsInteractor interactor;
     private ResourceManager resourceManager;
-    private Bitmap image;
+    private String image;
     private String photoFileName;
 
     public AddContactPresenter() {
@@ -37,12 +36,15 @@ public class AddContactPresenter {
             interactor.addContact(contact, new DatabaseManager.AddContactListener() {
                 @Override
                 public void onSuccess() {
-                    Toaster.shortToast(resourceManager.getStringAddContactSuccess());
+                    if (AddContactPresenter.this.image != null) {
+                        if (resourceManager.checkWriteSdPermission()) {
+                            interactor.saveContactPhoto(AddContactPresenter.this.image, AddContactPresenter.this.photoFileName);
+                            resetImage();
+                        } else
+                            view.requestWriteSdPermission();
+                    }
                     view.clearFields();
-                    if (resourceManager.checkWriteSdPermission())
-                        interactor.saveContactPhoto(AddContactPresenter.this.image, AddContactPresenter.this.photoFileName);
-                    else
-                        view.requestWriteSdPermission();
+                    Toaster.shortToast(resourceManager.getStringAddContactSuccess());
                 }
 
                 @Override
@@ -54,19 +56,30 @@ public class AddContactPresenter {
     }
 
 
-    public void onRequestWriteSdPermissionResult(boolean granded) {
-        if (granded)
-            interactor.saveContactPhoto(this.image, this.photoFileName);
-        else
-            view.requestWriteSdPermission();
+    private void resetImage() {
+        view.resetImage();
+        this.image = null;
     }
 
-    public void onImageChosen(Bitmap image) {
-        this.image = image;
-        view.setImage(image);
+    public void onRequestWriteSdPermissionResult(boolean granded) {
+        if (this.image != null) {
+            if (granded) {
+                interactor.saveContactPhoto(this.image, this.photoFileName);
+                resetImage();
+            } else
+                view.requestWriteSdPermission();
+        }
+    }
+
+    public void onImageChosen(String imageUri) {
+        if (imageUri != null) {
+            this.image = imageUri;
+            view.setImage(imageUri);
+        }
     }
 
     public void releasePresenter() {
+        resourceManager.clearImageCache();
         view = null;
         interactor = null;
         resourceManager = null;
@@ -75,4 +88,24 @@ public class AddContactPresenter {
     public void onImageClick() {
         view.chooseImage();
     }
+
+    public void saveImage() {
+        if (this.image != null) {
+            resourceManager.saveImageToCache(this.image);
+        }
+    }
+
+    private void restoreState(Contact contact) {
+        String cachedImage = resourceManager.getImageFromCache();
+        if (cachedImage != null) {
+            this.image = cachedImage;
+            view.setImage(this.image);
+        }
+        view.setFields(contact);
+    }
+
+    public void onRotate(Contact contact) {
+        restoreState(contact);
+    }
+
 }

@@ -41,7 +41,7 @@ public class ContactsRepository {
         databaseManager.putContact(contact, addContactListener);
     }
 
-    public void saveContactPhoto(Bitmap image, String photoFileName) {
+    public void saveContactPhoto(String image, String photoFileName) {
         resourceManager.saveContactPhoto(image, photoFileName);
     }
 

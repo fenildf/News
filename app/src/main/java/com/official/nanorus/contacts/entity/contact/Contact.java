@@ -1,6 +1,8 @@
 package com.official.nanorus.contacts.entity.contact;
 
-public class Contact {
+import java.io.Serializable;
+
+public class Contact implements Serializable {
 
     private int id;
     private String name;

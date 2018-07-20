@@ -35,7 +35,7 @@ public class ContactsInteractor {
         repository.addContact(contact, addContactListener);
     }
 
-    public void saveContactPhoto(Bitmap image, String photoFileName) {
+    public void saveContactPhoto(String image, String photoFileName) {
         repository.saveContactPhoto(image, photoFileName);
     }
 

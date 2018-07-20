@@ -1,7 +1,6 @@
 package com.official.nanorus.contacts.presentation.presenter;
 
 import com.official.nanorus.contacts.model.domain.ContactsInteractor;
-import com.official.nanorus.contacts.presentation.ui.Toaster;
 import com.official.nanorus.contacts.presentation.view.MainActivity;
 
 public class ContactsPresenter {
@@ -16,9 +15,9 @@ public class ContactsPresenter {
     public void bindView(MainActivity view) {
         this.view = view;
         view.setSelectedMenuItem(interactor.getLastMenuItem());
-        if (interactor.getLastMenuItem() == MainActivity.MENU_ITEM_CONTACTS_LIST) {
+        if (interactor.getLastMenuItem() == MainActivity.FRAGMENT_CONTACTS_LIST) {
             onContactsListMenuItemClicked();
-        } else if (interactor.getLastMenuItem() == MainActivity.MENU_ITEM_ADD_CONTACT)
+        } else if (interactor.getLastMenuItem() == MainActivity.FRAGMENT_ADD_CONTACT)
             onAddContactMenuItemClicked();
     }
 
