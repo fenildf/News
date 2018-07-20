@@ -1,6 +1,11 @@
 package com.official.nanorus.contacts.model.repository;
 
+import android.graphics.Bitmap;
+
+import com.official.nanorus.contacts.app.App;
 import com.official.nanorus.contacts.entity.contact.Contact;
+import com.official.nanorus.contacts.model.data.AppPreferencesManager;
+import com.official.nanorus.contacts.model.data.ResourceManager;
 import com.official.nanorus.contacts.model.data.database.DatabaseManager;
 
 import java.util.List;
@@ -11,6 +16,8 @@ import rx.schedulers.Schedulers;
 public class ContactsRepository {
 
     private DatabaseManager databaseManager;
+    private ResourceManager resourceManager;
+    private AppPreferencesManager preferencesManager;
 
     private static ContactsRepository instance;
 
@@ -22,19 +29,27 @@ public class ContactsRepository {
 
     public ContactsRepository() {
         databaseManager = DatabaseManager.getInstance();
+        resourceManager = new ResourceManager();
+        preferencesManager = AppPreferencesManager.getInstance();
     }
 
     public Observable<List<Contact>> getContacts() {
-        return databaseManager.getContacts().map(contactList -> {
-            for (Contact contact : contactList) {
-                contact.setImage(null);
-            }
-            return contactList;
-        }).subscribeOn(Schedulers.io());
+        return databaseManager.getContacts().subscribeOn(Schedulers.io());
     }
 
     public void addContact(Contact contact, DatabaseManager.AddContactListener addContactListener) {
         databaseManager.putContact(contact, addContactListener);
     }
 
+    public void saveContactPhoto(Bitmap image, String photoFileName) {
+        resourceManager.saveContactPhoto(image, photoFileName);
+    }
+
+    public void setLastMenuItem(int item) {
+        preferencesManager.setSelectedMenuItem(item);
+    }
+
+    public int getLastMenuItem() {
+        return preferencesManager.getSelectedMenuItem();
+    }
 }

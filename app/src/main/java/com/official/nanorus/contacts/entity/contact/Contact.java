@@ -21,7 +21,7 @@ public class Contact {
     }
 
 
-    public Contact(String name, String surname, String patronymic, String phone, String email) {
+    public Contact(String name, String surname, String patronymic, String phone, String email, String image) {
         this.name = name;
         this.surname = surname;
         this.patronymic = patronymic;

@@ -1,6 +1,13 @@
 package com.official.nanorus.contacts.presentation.view;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +22,8 @@ import com.official.nanorus.contacts.entity.contact.Contact;
 import com.official.nanorus.contacts.presentation.presenter.ContactsListPresenter;
 import com.official.nanorus.contacts.presentation.ui.adapters.ContactsRecyclerViewAdapter;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 
 import butterknife.BindView;
@@ -53,6 +62,8 @@ public class ContactsListFragment extends Fragment {
         adapter.updateList(contacts);
         adapter.notifyDataSetChanged();
     }
+
+
 
     @Override
     public void onDestroyView() {

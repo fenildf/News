@@ -1,5 +1,6 @@
 package com.official.nanorus.contacts.presentation.view;
 
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -20,6 +21,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
+    public static final int MY_PERMISSIONS_REQUEST_WRITE_SD = 1;
+
+    public static int MENU_ITEM_CONTACTS_LIST = 0;
+    public static int MENU_ITEM_ADD_CONTACT = 1;
 
     @BindView(R.id.frame)
     FrameLayout frameLayout;
@@ -35,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     ContactsListFragment contactsListFragment;
     AddContactFragment addContactFragment;
 
+    private int selectedMenuItem = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,13 +56,14 @@ public class MainActivity extends AppCompatActivity {
         presenter.bindView(this);
     }
 
-    public void showContacts(){
+    public void showContacts() {
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         fragmentTransaction.replace(R.id.frame, contactsListFragment);
         fragmentTransaction.commit();
     }
-    public void showAddContact(){
+
+    public void showAddContact() {
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.replace(R.id.frame, addContactFragment);
@@ -108,9 +116,11 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.menu_item_contacts:
                     presenter.onContactsListMenuItemClicked();
+                    selectedMenuItem = MENU_ITEM_CONTACTS_LIST;
                     break;
                 case R.id.menu_item_add_contact:
                     presenter.onAddContactMenuItemClicked();
+                    selectedMenuItem = MENU_ITEM_ADD_CONTACT;
                     break;
             }
             drawerLayout.closeDrawers();
@@ -119,8 +129,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_WRITE_SD: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    addContactFragment.onWriteDbPermissionResult(true);
+                } else {
+                    addContactFragment.onWriteDbPermissionResult(false);
+                }
+                break;
+            }
+        }
+    }
+
+    public void setSelectedMenuItem(int item){
+        selectedMenuItem = item;
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+        presenter.saveMenuState(selectedMenuItem);
         presenter.releasePresenter();
         presenter = null;
     }

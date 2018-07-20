@@ -8,8 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.official.nanorus.contacts.R;
 import com.official.nanorus.contacts.entity.contact.Contact;
+import com.official.nanorus.contacts.model.data.ResourceManager;
+import com.official.nanorus.contacts.model.data.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +21,11 @@ import java.util.List;
 public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactsRecyclerViewAdapter.ContactsViewHolder> {
 
     private List<Contact> dataList;
+    private ResourceManager resourceManager;
 
     public ContactsRecyclerViewAdapter() {
         dataList = new ArrayList<>();
+        resourceManager = new ResourceManager();
     }
 
     public void updateList(List<Contact> list) {
@@ -41,6 +47,11 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactsRe
         holder.patronymicTextView.setText(contact.getPatronymic());
         holder.phoneTextView.setText(contact.getPhone());
         holder.emailTextView.setText(contact.getEmail());
+        String photoUri = resourceManager.getContactPhotoUri(dataList.get(position).getImage());
+        Glide.with(holder.itemView.getContext())
+                .load(photoUri)
+                .apply(RequestOptions.circleCropTransform().placeholder(R.drawable.ic_no_photo))
+                .into(holder.photoImageView);
     }
 
     @Override

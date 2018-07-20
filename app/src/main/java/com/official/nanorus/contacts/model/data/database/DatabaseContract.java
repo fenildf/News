@@ -8,6 +8,7 @@ public class DatabaseContract {
     public final String COLUMN_NAME_CONTACTS_PATRONYMIC = "patronymic";
     public final String COLUMN_NAME_CONTACTS_PHONE = "phone";
     public final String COLUMN_NAME_CONTACTS_EMAIL = "email";
+    public final String COLUMN_NAME_CONTACTS_IMAGE = "image";
 
     public final String COLUMN_NAME_ID = "_id";
     public final String COMMA = ",";

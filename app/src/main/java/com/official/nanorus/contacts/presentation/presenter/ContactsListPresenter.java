@@ -1,5 +1,6 @@
 package com.official.nanorus.contacts.presentation.presenter;
 
+import android.graphics.Bitmap;
 import android.provider.ContactsContract;
 
 import com.official.nanorus.contacts.entity.contact.Contact;
@@ -21,6 +22,10 @@ public class ContactsListPresenter {
     public ContactsListPresenter() {
         interactor = ContactsInteractor.getInstance();
         contactObservable = interactor.getContacts().observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public void bindView(ContactsListFragment view) {
+        this.view = view;
         contactObservable.subscribe(contacts -> {
                     Collections.reverse(contacts);
                     view.updateContactList(contacts);
@@ -28,12 +33,9 @@ public class ContactsListPresenter {
         );
     }
 
-    public void bindView(ContactsListFragment view) {
-        this.view = view;
-    }
-
     public void releasePresenter() {
         view = null;
         interactor = null;
     }
+
 }

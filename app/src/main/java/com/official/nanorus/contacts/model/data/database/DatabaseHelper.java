@@ -12,7 +12,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private DatabaseContract databaseContract;
     private static final String DB_NAME = "Database.db";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
     public static int DBConnectionsCount = 0;
 
 
@@ -36,7 +36,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+        if (i == 1 && i1 == 2) {
+            sqLiteDatabase.execSQL("ALTER TABLE " + databaseContract.TABLE_NAME_CONTACTS + " ADD COLUMN " + databaseContract.COLUMN_NAME_CONTACTS_IMAGE + " TEXT");
+        }
     }
 
     public SQLiteDatabase getReadableDB() {

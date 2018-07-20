@@ -58,7 +58,7 @@ public class DatabaseManager {
                             cursor.getString(cursor.getColumnIndex(databaseContract.COLUMN_NAME_CONTACTS_PATRONYMIC)),
                             cursor.getString(cursor.getColumnIndex(databaseContract.COLUMN_NAME_CONTACTS_PHONE)),
                             cursor.getString(cursor.getColumnIndex(databaseContract.COLUMN_NAME_CONTACTS_EMAIL)),
-                            null
+                            cursor.getString(cursor.getColumnIndex(databaseContract.COLUMN_NAME_CONTACTS_IMAGE))
                     ));
                     if (contactList.size() >= 15) {
                         contactEmitter.onNext(contactList);
@@ -89,6 +89,8 @@ public class DatabaseManager {
             cv.put(databaseContract.COLUMN_NAME_CONTACTS_PHONE, contact.getPhone());
         if (contact.getEmail() != null)
             cv.put(databaseContract.COLUMN_NAME_CONTACTS_EMAIL, contact.getEmail());
+        if (contact.getImage() != null)
+            cv.put(databaseContract.COLUMN_NAME_CONTACTS_IMAGE, contact.getImage());
         if (cv.size() > 0) {
             long result = db.insert(databaseContract.TABLE_NAME_CONTACTS, null, cv);
             if (result == -1)
