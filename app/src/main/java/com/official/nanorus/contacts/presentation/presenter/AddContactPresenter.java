@@ -1,7 +1,5 @@
 package com.official.nanorus.contacts.presentation.presenter;
 
-import android.graphics.Bitmap;
-
 import com.official.nanorus.contacts.entity.contact.Contact;
 import com.official.nanorus.contacts.model.data.ResourceManager;
 import com.official.nanorus.contacts.model.data.Utils;
@@ -33,7 +31,7 @@ public class AddContactPresenter {
         } else {
             this.photoFileName = Utils.generateRandomString();
             contact.setImage(photoFileName);
-            interactor.addContact(contact, new DatabaseManager.AddContactListener() {
+            interactor.addContact(contact, new DatabaseManager.SuccessListener() {
                 @Override
                 public void onSuccess() {
                     if (AddContactPresenter.this.image != null) {

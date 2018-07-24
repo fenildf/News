@@ -1,5 +1,6 @@
 package com.official.nanorus.contacts.presentation.view;
 
+import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.support.annotation.Nullable;
@@ -9,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -16,11 +18,12 @@ import android.support.design.widget.NavigationView;
 
 import com.official.nanorus.contacts.R;
 import com.official.nanorus.contacts.presentation.presenter.ContactsPresenter;
+import com.official.nanorus.contacts.presentation.ui.adapters.ContactsRecyclerViewAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class ContactsActivity extends AppCompatActivity implements ContactsListFragment.ContactListListener, ContactsRecyclerViewAdapter.ContactsListListener {
     public static final int MY_PERMISSIONS_REQUEST_WRITE_SD = 1;
 
     public static int FRAGMENT_CONTACTS_LIST = 0;
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     NavigationView navigationView;
     ConstraintLayout navigationHeader;
     ActionBarDrawerToggle drawerToggle;
+    MenuItem deleteMenuItem;
 
     ContactsPresenter presenter;
     ContactsListFragment contactsListFragment;
@@ -69,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
             fragmentTransaction.replace(R.id.frame, contactsListFragment);
             fragmentTransaction.commit();
             attachedFragment = FRAGMENT_CONTACTS_LIST;
+            updateUI();
         }
     }
 
@@ -79,6 +84,17 @@ public class MainActivity extends AppCompatActivity {
             fragmentTransaction.replace(R.id.frame, addContactFragment);
             fragmentTransaction.commit();
             attachedFragment = FRAGMENT_ADD_CONTACT;
+            updateUI();
+        }
+    }
+
+    public void updateUI() {
+        if (attachedFragment == FRAGMENT_CONTACTS_LIST) {
+            if (deleteMenuItem != null)
+                deleteMenuItem.setVisible(true);
+        } else if (attachedFragment == FRAGMENT_ADD_CONTACT) {
+            if (deleteMenuItem != null)
+                deleteMenuItem.setVisible(false);
         }
     }
 
@@ -87,6 +103,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
+        }
+        switch (item.getItemId()) {
+            case R.id.clear_contacts:
+                presenter.onClearContactsClicked();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -141,8 +162,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_WRITE_SD: {
                 if (grantResults.length > 0
@@ -173,4 +193,45 @@ public class MainActivity extends AppCompatActivity {
         presenter.releasePresenter();
         presenter = null;
     }
+
+    @Override
+    public void addContact() {
+        presenter.onAddContactMenuItemClicked();
+    }
+
+    public void showDeleteContactDialog(int id, String name) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.dialog_delete_contact) + " " + name + "?")
+                .setPositiveButton(R.string.delete, (dialog, id12) -> presenter.onContactSelectedAction(id))
+                .setNegativeButton(R.string.cancel, (dialog, id1) -> dialog.dismiss());
+        builder.show();
+    }
+
+    @Override
+    public void onContactLongClicked(int id, String name) {
+        presenter.onContactSelected(id, name);
+    }
+
+    public void showClearContactsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.dialog_clear_contacts))
+                .setPositiveButton(R.string.delete, (dialog, id12) -> presenter.onClearContactsAction())
+                .setNegativeButton(R.string.cancel, (dialog, id1) -> dialog.dismiss());
+        builder.show();
+    }
+
+    public void refreshContacts() {
+        if (contactsListFragment != null)
+            contactsListFragment.refreshContacts();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.contacts_toolbar_menu, menu);
+        deleteMenuItem = menu.findItem(R.id.clear_contacts);
+        updateUI();
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
 }

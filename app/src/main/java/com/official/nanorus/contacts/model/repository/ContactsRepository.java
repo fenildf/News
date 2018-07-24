@@ -1,8 +1,5 @@
 package com.official.nanorus.contacts.model.repository;
 
-import android.graphics.Bitmap;
-
-import com.official.nanorus.contacts.app.App;
 import com.official.nanorus.contacts.entity.contact.Contact;
 import com.official.nanorus.contacts.model.data.AppPreferencesManager;
 import com.official.nanorus.contacts.model.data.ResourceManager;
@@ -37,8 +34,8 @@ public class ContactsRepository {
         return databaseManager.getContacts().subscribeOn(Schedulers.io());
     }
 
-    public void addContact(Contact contact, DatabaseManager.AddContactListener addContactListener) {
-        databaseManager.putContact(contact, addContactListener);
+    public void addContact(Contact contact, DatabaseManager.SuccessListener successListener) {
+        databaseManager.putContact(contact, successListener);
     }
 
     public void saveContactPhoto(String image, String photoFileName) {
@@ -51,5 +48,13 @@ public class ContactsRepository {
 
     public int getLastMenuItem() {
         return preferencesManager.getSelectedMenuItem();
+    }
+
+    public void deleteContact(int id, DatabaseManager.SuccessListener successListener) {
+        databaseManager.deleteContact(id, successListener);
+    }
+
+    public void clearContacts(DatabaseManager.SuccessListener successListener) {
+        databaseManager.clearContacts(successListener);
     }
 }

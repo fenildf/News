@@ -117,4 +117,19 @@ public class ResourceManager {
         File f = new File(cacheDir, "addContact.png");
         // f.delete();
     }
+
+    public String getStringContactDeleted() {
+        return context.getString(R.string.contact_deleted);
+    }
+    public String getStringContactNotDeleted() {
+        return context.getString(R.string.contact_not_deleted);
+    }
+
+    public String getStringContactsCleared() {
+        return context.getString(R.string.contacts_cleared);
+    }
+
+    public String getStringContactsNotCleared() {
+        return context.getString(R.string.contacts_not_cleared);
+    }
 }

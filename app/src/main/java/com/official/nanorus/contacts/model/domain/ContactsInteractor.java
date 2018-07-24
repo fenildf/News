@@ -1,11 +1,8 @@
 package com.official.nanorus.contacts.model.domain;
 
-import android.graphics.Bitmap;
-
 import com.official.nanorus.contacts.entity.contact.Contact;
 import com.official.nanorus.contacts.model.data.database.DatabaseManager;
 import com.official.nanorus.contacts.model.repository.ContactsRepository;
-import com.official.nanorus.contacts.presentation.presenter.AddContactPresenter;
 
 import java.util.List;
 
@@ -31,8 +28,8 @@ public class ContactsInteractor {
         return repository.getContacts();
     }
 
-    public void addContact(Contact contact, DatabaseManager.AddContactListener addContactListener) {
-        repository.addContact(contact, addContactListener);
+    public void addContact(Contact contact, DatabaseManager.SuccessListener successListener) {
+        repository.addContact(contact, successListener);
     }
 
     public void saveContactPhoto(String image, String photoFileName) {
@@ -45,5 +42,13 @@ public class ContactsInteractor {
 
     public void setLastMenuItem(int item) {
         repository.setLastMenuItem(item);
+    }
+
+    public void deleteContact(int id, DatabaseManager.SuccessListener successListener) {
+        repository.deleteContact(id, successListener);
+    }
+
+    public void clearContacts(DatabaseManager.SuccessListener successListener) {
+        repository.clearContacts(successListener);
     }
 }

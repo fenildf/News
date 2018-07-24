@@ -1,7 +1,9 @@
 package com.official.nanorus.contacts.presentation.ui.adapters;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,19 +16,31 @@ import com.bumptech.glide.request.RequestOptions;
 import com.official.nanorus.contacts.R;
 import com.official.nanorus.contacts.entity.contact.Contact;
 import com.official.nanorus.contacts.model.data.ResourceManager;
-import com.official.nanorus.contacts.model.data.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactsRecyclerViewAdapter.ContactsViewHolder> {
 
+    public final String TAG = this.getClass().getSimpleName();
+
     private List<Contact> dataList;
     private ResourceManager resourceManager;
+    private Context context;
 
-    public ContactsRecyclerViewAdapter() {
+    public ContactsRecyclerViewAdapter(Context context) {
+        this.context = context;
         dataList = new ArrayList<>();
         resourceManager = new ResourceManager();
+    }
+
+    public void clearList() {
+        if (dataList != null)
+            dataList.clear();
+    }
+
+    public interface ContactsListListener {
+        void onContactLongClicked(int id, String name);
     }
 
     public void updateList(List<Contact> list) {
@@ -52,9 +66,19 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactsRe
         Glide.with(holder.itemView.getContext())
                 .load(photoUri)
                 .apply(RequestOptions.bitmapTransform(new CircleCrop())
-                       .placeholder(R.drawable.ic_no_photo)
+                        .placeholder(R.drawable.ic_no_photo)
                 )
                 .into(holder.photoImageView);
+
+        holder.itemView.setOnLongClickListener(view -> {
+            try {
+                ((ContactsListListener) context)
+                        .onContactLongClicked(dataList.get(position).getId(), dataList.get(position).getName());
+            } catch (ClassCastException cce) {
+                Log.d(TAG, cce.getMessage());
+            }
+            return false;
+        });
     }
 
     @Override

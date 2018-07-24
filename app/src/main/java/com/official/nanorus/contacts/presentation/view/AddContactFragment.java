@@ -2,12 +2,7 @@ package com.official.nanorus.contacts.presentation.view;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -28,11 +23,8 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.official.nanorus.contacts.R;
 import com.official.nanorus.contacts.entity.contact.Contact;
+import com.official.nanorus.contacts.model.data.Utils;
 import com.official.nanorus.contacts.presentation.presenter.AddContactPresenter;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,6 +33,7 @@ import butterknife.OnClick;
 public class AddContactFragment extends Fragment {
 
     public static final String SAVE_INSTANCE_CONTACT = "contact";
+    private static final int REQUEST_CODE_IMAGE = 100;
 
     public final String TAG = this.getClass().getSimpleName();
 
@@ -111,7 +104,7 @@ public class AddContactFragment extends Fragment {
 
     public void chooseImage() {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(photoPickerIntent, 100);
+        startActivityForResult(photoPickerIntent, REQUEST_CODE_IMAGE);
     }
 
     public void setImage(String image) {
@@ -138,18 +131,18 @@ public class AddContactFragment extends Fragment {
         if (getActivity() != null)
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    MainActivity.MY_PERMISSIONS_REQUEST_WRITE_SD);
+                    ContactsActivity.MY_PERMISSIONS_REQUEST_WRITE_SD);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case 100:
+            case REQUEST_CODE_IMAGE:
                 if (resultCode == Activity.RESULT_OK) {
                     Uri selectedImage = data.getData();
                     if (selectedImage != null) {
-                        presenter.onImageChosen(getRealPathFromURI(getContext(), selectedImage));
+                        presenter.onImageChosen(Utils.getRealPathFromURI(selectedImage));
                     }
                 }
                 break;
@@ -176,23 +169,5 @@ public class AddContactFragment extends Fragment {
         presenter.saveImage();
     }
 
-
-    private String getRealPathFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            String[] proj = {MediaStore.Images.Media.DATA};
-            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } catch (Exception e) {
-            Log.e(TAG, "getRealPathFromURI Exception : " + e.toString());
-            return "";
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
 
 }

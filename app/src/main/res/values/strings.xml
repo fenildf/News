@@ -17,4 +17,12 @@
     <string name="test_email">stephan_mccol@gmail.com</string>
     <string name="contact_added">Contact added</string>
     <string name="contact_did_not_add">The contact was not added</string>
+    <string name="dialog_clear_contacts">Are you sure to clear contact list?</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="contact_deleted">Contact deleted</string>
+    <string name="contact_not_deleted">Contact not deleted</string>
+    <string name="contacts_cleared">Contacts cleared</string>
+    <string name="contacts_not_cleared">Contacts not cleared</string>
+    <string name="dialog_delete_contact">Are you sure to delete contact</string>
 </resources>

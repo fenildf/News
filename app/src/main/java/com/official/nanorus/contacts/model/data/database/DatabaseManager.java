@@ -12,9 +12,6 @@ import java.util.List;
 
 import rx.Emitter;
 import rx.Observable;
-import rx.Scheduler;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 
 public class DatabaseManager {
@@ -24,7 +21,28 @@ public class DatabaseManager {
 
     private final String TAG = this.getClass().getName();
 
-    public interface AddContactListener {
+    public void deleteContact(int id, SuccessListener successListener) {
+        int result = databaseHelper.getWritableDB().delete(databaseContract.TABLE_NAME_CONTACTS,
+                databaseContract.COLUMN_NAME_ID + " = " + id, null);
+        if (result > 0) {
+            successListener.onSuccess();
+        } else {
+            successListener.onFail();
+        }
+        databaseHelper.closeDB();
+    }
+
+    public void clearContacts(SuccessListener successListener) {
+        int result = databaseHelper.getWritableDB().delete(databaseContract.TABLE_NAME_CONTACTS, "1", null);
+        if (result > 0) {
+            successListener.onSuccess();
+        } else {
+            successListener.onFail();
+        }
+        databaseHelper.closeDB();
+    }
+
+    public interface SuccessListener {
 
         void onSuccess();
 
@@ -75,7 +93,7 @@ public class DatabaseManager {
         }, Emitter.BackpressureMode.BUFFER);
     }
 
-    public void putContact(Contact contact, AddContactListener addContactListener) {
+    public void putContact(Contact contact, SuccessListener successListener) {
         Log.d(TAG, "putContact()");
         SQLiteDatabase db = databaseHelper.getWritableDB();
         ContentValues cv = new ContentValues();
@@ -94,9 +112,9 @@ public class DatabaseManager {
         if (cv.size() > 0) {
             long result = db.insert(databaseContract.TABLE_NAME_CONTACTS, null, cv);
             if (result == -1)
-                addContactListener.onFail();
+                successListener.onFail();
             else
-                addContactListener.onSuccess();
+                successListener.onSuccess();
 
         }
         databaseHelper.closeDB();
