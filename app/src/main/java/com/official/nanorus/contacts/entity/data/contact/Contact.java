@@ -1,4 +1,4 @@
-package com.official.nanorus.contacts.entity.contact;
+package com.official.nanorus.contacts.entity.data.contact;
 
 import java.io.Serializable;
 

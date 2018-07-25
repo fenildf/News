@@ -3,18 +3,18 @@ package com.official.nanorus.contacts.presentation.view;
 import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.support.design.widget.NavigationView;
 
 import com.official.nanorus.contacts.R;
 import com.official.nanorus.contacts.presentation.presenter.ContactsPresenter;
@@ -24,6 +24,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ContactsActivity extends AppCompatActivity implements ContactsListFragment.ContactListListener, ContactsRecyclerViewAdapter.ContactsListListener {
+
+    private  final String TAG = this.getClass().getSimpleName();
+
     public static final int MY_PERMISSIONS_REQUEST_WRITE_SD = 1;
 
     public static int FRAGMENT_CONTACTS_LIST = 0;

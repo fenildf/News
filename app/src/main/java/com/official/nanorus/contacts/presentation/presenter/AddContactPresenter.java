@@ -1,6 +1,6 @@
 package com.official.nanorus.contacts.presentation.presenter;
 
-import com.official.nanorus.contacts.entity.contact.Contact;
+import com.official.nanorus.contacts.entity.data.contact.Contact;
 import com.official.nanorus.contacts.model.data.ResourceManager;
 import com.official.nanorus.contacts.model.data.Utils;
 import com.official.nanorus.contacts.model.data.database.DatabaseManager;

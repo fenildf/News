@@ -1,12 +1,12 @@
 package com.official.nanorus.contacts.model.domain;
 
-import com.official.nanorus.contacts.entity.contact.Contact;
+import com.official.nanorus.contacts.entity.data.contact.Contact;
 import com.official.nanorus.contacts.model.data.database.DatabaseManager;
 import com.official.nanorus.contacts.model.repository.ContactsRepository;
 
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 public class ContactsInteractor {
 

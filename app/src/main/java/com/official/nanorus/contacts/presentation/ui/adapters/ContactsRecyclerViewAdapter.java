@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.official.nanorus.contacts.R;
-import com.official.nanorus.contacts.entity.contact.Contact;
+import com.official.nanorus.contacts.entity.data.contact.Contact;
 import com.official.nanorus.contacts.model.data.ResourceManager;
 
 import java.util.ArrayList;

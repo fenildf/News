@@ -1,7 +1,5 @@
 package com.official.nanorus.contacts.presentation.view;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.official.nanorus.contacts.R;
-import com.official.nanorus.contacts.entity.contact.Contact;
+import com.official.nanorus.contacts.entity.data.contact.Contact;
 import com.official.nanorus.contacts.presentation.presenter.ContactsListPresenter;
 import com.official.nanorus.contacts.presentation.ui.adapters.ContactsRecyclerViewAdapter;
 

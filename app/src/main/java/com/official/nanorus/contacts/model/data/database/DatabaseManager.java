@@ -5,13 +5,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.official.nanorus.contacts.entity.contact.Contact;
+import com.official.nanorus.contacts.entity.data.contact.Contact;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Emitter;
-import rx.Observable;
+import io.reactivex.Observable;
 
 
 public class DatabaseManager {
@@ -63,7 +62,7 @@ public class DatabaseManager {
 
     public Observable<List<Contact>> getContacts() {
         Log.d(TAG, "getContacts()");
-        return Observable.create(contactEmitter -> {
+        return Observable.create(emitter -> {
             SQLiteDatabase db = databaseHelper.getReadableDB();
             Cursor cursor = db.rawQuery("SELECT * FROM " + databaseContract.TABLE_NAME_CONTACTS, null);
             List<Contact> contactList = new ArrayList<>();
@@ -79,18 +78,19 @@ public class DatabaseManager {
                             cursor.getString(cursor.getColumnIndex(databaseContract.COLUMN_NAME_CONTACTS_IMAGE))
                     ));
                     if (contactList.size() >= 15) {
-                        contactEmitter.onNext(contactList);
+                        emitter.onNext(contactList);
                         contactList = new ArrayList<>();
                     }
                 } while (cursor.moveToNext());
                 if (contactList.size() != 0) {
-                    contactEmitter.onNext(contactList);
+                    emitter.onNext(contactList);
                 }
             }
-            contactEmitter.onCompleted();
+
+            emitter.onComplete();
             cursor.close();
             databaseHelper.closeDB();
-        }, Emitter.BackpressureMode.BUFFER);
+        });
     }
 
     public void putContact(Contact contact, SuccessListener successListener) {
