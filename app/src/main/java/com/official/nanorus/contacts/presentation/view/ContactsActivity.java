@@ -54,9 +54,6 @@ public class ContactsActivity extends AppCompatActivity implements ContactsListF
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        if (savedInstanceState != null)
-            attachedFragment = savedInstanceState.getInt(ATTACHED_FRAGMENT_KEY);
-
         setupNavigationDrawer();
 
         contactsListFragment = new ContactsListFragment();
@@ -196,6 +193,8 @@ public class ContactsActivity extends AppCompatActivity implements ContactsListF
 
     @Override
     public void addContact() {
+        setSelectedMenuItem(FRAGMENT_ADD_CONTACT);
+        presenter.saveMenuState(selectedMenuItem);
         presenter.onAddContactMenuItemClicked();
     }
 

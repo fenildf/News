@@ -45,6 +45,7 @@ public class ContactsListFragment extends Fragment  {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView()");
         View view = inflater.inflate(R.layout.fragment_contacts, null);
         ButterKnife.bind(this, view);
 
@@ -87,6 +88,7 @@ public class ContactsListFragment extends Fragment  {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        Log.d(TAG, "onDestroyView()");
         presenter.releasePresenter();
         presenter = null;
     }

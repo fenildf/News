@@ -1,5 +1,7 @@
 package com.official.nanorus.contacts.presentation.presenter;
 
+import android.util.Log;
+
 import com.official.nanorus.contacts.entity.contact.Contact;
 import com.official.nanorus.contacts.model.domain.ContactsInteractor;
 import com.official.nanorus.contacts.presentation.view.ContactsListFragment;
@@ -12,6 +14,8 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class ContactsListPresenter {
+
+    public final String TAG = this.getClass().getSimpleName();
 
     private ContactsInteractor interactor;
     private ContactsListFragment view;
@@ -39,6 +43,7 @@ public class ContactsListPresenter {
     }
 
     public void refreshContacts() {
+        Log.d(TAG, "refreshContacts()");
         view.clearContactList();
         if (contactsSubscription != null && !contactsSubscription.isUnsubscribed()) {
             contactsSubscription.unsubscribe();
@@ -46,6 +51,8 @@ public class ContactsListPresenter {
         contactsSubscription = contactsObservable.subscribe(contacts -> {
                     Collections.reverse(contacts);
                     view.updateContactList(contacts);
-                });
+                },
+                throwable -> Log.d(TAG, throwable.getMessage())
+                );
     }
 }

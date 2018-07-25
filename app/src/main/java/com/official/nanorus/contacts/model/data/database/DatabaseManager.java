@@ -19,7 +19,7 @@ public class DatabaseManager {
     private DatabaseHelper databaseHelper;
     private DatabaseContract databaseContract;
 
-    private final String TAG = this.getClass().getName();
+    private final String TAG = this.getClass().getSimpleName();
 
     public void deleteContact(int id, SuccessListener successListener) {
         int result = databaseHelper.getWritableDB().delete(databaseContract.TABLE_NAME_CONTACTS,
