@@ -77,7 +77,6 @@ public class AddContactPresenter {
     }
 
     public void releasePresenter() {
-        resourceManager.clearImageCache();
         view = null;
         interactor = null;
         resourceManager = null;
@@ -106,4 +105,8 @@ public class AddContactPresenter {
         restoreState(contact);
     }
 
+    public void onCreate() {
+        resetImage();
+        resourceManager.clearImageCache();
+    }
 }

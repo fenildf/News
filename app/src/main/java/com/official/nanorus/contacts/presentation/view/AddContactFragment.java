@@ -65,6 +65,8 @@ public class AddContactFragment extends Fragment {
         if (savedInstanceState != null) {
             Contact contact = (Contact) savedInstanceState.getSerializable(SAVE_INSTANCE_CONTACT);
             presenter.onRotate(contact);
+        } else {
+            presenter.onCreate();
         }
         return view;
     }

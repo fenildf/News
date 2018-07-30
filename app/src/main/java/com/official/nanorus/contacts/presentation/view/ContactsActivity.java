@@ -25,12 +25,14 @@ import butterknife.ButterKnife;
 
 public class ContactsActivity extends AppCompatActivity implements ContactsListFragment.ContactListListener, ContactsRecyclerViewAdapter.ContactsListListener {
 
-    private  final String TAG = this.getClass().getSimpleName();
+    private final String TAG = this.getClass().getSimpleName();
 
     public static final int MY_PERMISSIONS_REQUEST_WRITE_SD = 1;
 
     public static int FRAGMENT_CONTACTS_LIST = 0;
     public static int FRAGMENT_ADD_CONTACT = 1;
+    public static String FRAGMENT_CONTACTS_LIST_TAG = "fragment_contacts";
+    public static String FRAGMENT_ADD_CONTACT_TAG = "fragment_add_contact";
     public static String ATTACHED_FRAGMENT_KEY = "fragment";
 
     @BindView(R.id.frame)
@@ -57,10 +59,14 @@ public class ContactsActivity extends AppCompatActivity implements ContactsListF
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        setupNavigationDrawer();
+        if (savedInstanceState != null)
+            attachedFragment = savedInstanceState.getInt(ATTACHED_FRAGMENT_KEY);
 
         contactsListFragment = new ContactsListFragment();
         addContactFragment = new AddContactFragment();
+
+
+        setupNavigationDrawer();
 
         presenter = new ContactsPresenter();
         presenter.bindView(this);
@@ -70,10 +76,12 @@ public class ContactsActivity extends AppCompatActivity implements ContactsListF
         if (attachedFragment != FRAGMENT_CONTACTS_LIST) {
             fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
-            fragmentTransaction.replace(R.id.frame, contactsListFragment);
+            fragmentTransaction.replace(R.id.frame, contactsListFragment, FRAGMENT_CONTACTS_LIST_TAG);
             fragmentTransaction.commit();
             attachedFragment = FRAGMENT_CONTACTS_LIST;
             updateUI();
+        } else {
+            contactsListFragment = (ContactsListFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_CONTACTS_LIST_TAG);
         }
     }
 
@@ -81,10 +89,12 @@ public class ContactsActivity extends AppCompatActivity implements ContactsListF
         if (attachedFragment != FRAGMENT_ADD_CONTACT) {
             fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            fragmentTransaction.replace(R.id.frame, addContactFragment);
+            fragmentTransaction.replace(R.id.frame, addContactFragment, FRAGMENT_ADD_CONTACT_TAG);
             fragmentTransaction.commit();
             attachedFragment = FRAGMENT_ADD_CONTACT;
             updateUI();
+        } else {
+            addContactFragment = (AddContactFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_ADD_CONTACT_TAG);
         }
     }
 

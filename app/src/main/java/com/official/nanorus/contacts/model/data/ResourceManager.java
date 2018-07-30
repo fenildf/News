@@ -3,19 +3,14 @@ package com.official.nanorus.contacts.model.data;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 
 import com.official.nanorus.contacts.R;
 import com.official.nanorus.contacts.app.App;
-import com.official.nanorus.contacts.presentation.ui.Toaster;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -115,12 +110,13 @@ public class ResourceManager {
     public void clearImageCache() {
         File cacheDir = new File(getCacheDir(), "pic");
         File f = new File(cacheDir, "addContact.png");
-        // f.delete();
+        f.delete();
     }
 
     public String getStringContactDeleted() {
         return context.getString(R.string.contact_deleted);
     }
+
     public String getStringContactNotDeleted() {
         return context.getString(R.string.contact_not_deleted);
     }
