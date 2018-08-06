@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class NewsArticle {
 
-    @SerializedName("newsSource")
+    @SerializedName("source")
     @Expose
     private NewsSource newsSource;
     @SerializedName("author")

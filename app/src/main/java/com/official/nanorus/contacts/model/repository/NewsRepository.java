@@ -21,12 +21,20 @@ public class NewsRepository {
     }
 
     public Observable<News> getRefreshedNews(String query) {
+        return (Observable<News>) retroClient.getPreparedObservable(
+                getApiNews(query),
+                News.class, true, true
+        );
+    }
+
+    private Observable<News> getApiNews(String query) {
         return retroClient.getNewsService().getNewsFeed(query)
                 .toObservable()
                 .map(NewsRequest::getNewsArticles)
                 .flatMap((Function<List<NewsArticle>, Observable<NewsArticle>>) Observable::fromIterable)
-                .map(newsArticle -> new News(newsArticle.getTitle(), newsArticle.getDescription(),
-                        newsArticle.getUrl(), newsArticle.getUrlToImage(), newsArticle.getPublishedAt()))
+                .map(newsArticle ->
+                        new News(newsArticle.getTitle(), newsArticle.getDescription(),
+                                newsArticle.getUrl(), newsArticle.getUrlToImage(), newsArticle.getPublishedAt()))
                 .subscribeOn(Schedulers.io());
     }
 

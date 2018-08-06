@@ -31,8 +31,11 @@ public class ContactsActivity extends AppCompatActivity implements ContactsListF
 
     public static int FRAGMENT_CONTACTS_LIST = 0;
     public static int FRAGMENT_ADD_CONTACT = 1;
+    public static int FRAGMENT_NEWS = 2;
     public static String FRAGMENT_CONTACTS_LIST_TAG = "fragment_contacts";
     public static String FRAGMENT_ADD_CONTACT_TAG = "fragment_add_contact";
+    public static String FRAGMENT_NEWS_TAG = "fragment_news";
+
     public static String ATTACHED_FRAGMENT_KEY = "fragment";
 
     @BindView(R.id.frame)
@@ -47,8 +50,10 @@ public class ContactsActivity extends AppCompatActivity implements ContactsListF
     MenuItem deleteMenuItem;
 
     ContactsPresenter presenter;
+
     ContactsListFragment contactsListFragment;
     AddContactFragment addContactFragment;
+    NewsFragment newsFragment;
 
     private int selectedMenuItem = 0;
     private int attachedFragment = -1;
@@ -59,11 +64,13 @@ public class ContactsActivity extends AppCompatActivity implements ContactsListF
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        if (savedInstanceState != null)
+        if (savedInstanceState != null) {
             attachedFragment = savedInstanceState.getInt(ATTACHED_FRAGMENT_KEY);
+        }
 
         contactsListFragment = new ContactsListFragment();
         addContactFragment = new AddContactFragment();
+        newsFragment = new NewsFragment();
 
 
         setupNavigationDrawer();
@@ -98,11 +105,27 @@ public class ContactsActivity extends AppCompatActivity implements ContactsListF
         }
     }
 
+    public void showNews() {
+        if (attachedFragment != FRAGMENT_NEWS) {
+            fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            fragmentTransaction.replace(R.id.frame, newsFragment, FRAGMENT_NEWS_TAG);
+            fragmentTransaction.commit();
+            attachedFragment = FRAGMENT_NEWS;
+            updateUI();
+        } else {
+            newsFragment = (NewsFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_NEWS_TAG);
+        }
+    }
+
     public void updateUI() {
         if (attachedFragment == FRAGMENT_CONTACTS_LIST) {
             if (deleteMenuItem != null)
                 deleteMenuItem.setVisible(true);
         } else if (attachedFragment == FRAGMENT_ADD_CONTACT) {
+            if (deleteMenuItem != null)
+                deleteMenuItem.setVisible(false);
+        } else if (attachedFragment == FRAGMENT_NEWS) {
             if (deleteMenuItem != null)
                 deleteMenuItem.setVisible(false);
         }
@@ -164,6 +187,10 @@ public class ContactsActivity extends AppCompatActivity implements ContactsListF
                 case R.id.menu_item_add_contact:
                     presenter.onAddContactMenuItemClicked();
                     selectedMenuItem = FRAGMENT_ADD_CONTACT;
+                    break;
+                case R.id.menu_item_news:
+                    presenter.onNewsMenuItemClicked();
+                    selectedMenuItem = FRAGMENT_NEWS;
                     break;
             }
             drawerLayout.closeDrawers();

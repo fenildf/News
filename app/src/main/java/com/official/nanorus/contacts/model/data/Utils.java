@@ -1,11 +1,12 @@
 package com.official.nanorus.contacts.model.data;
 
-import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.util.TypedValue;
 
 import com.official.nanorus.contacts.app.App;
 
@@ -42,6 +43,11 @@ public class Utils {
                 cursor.close();
             }
         }
+    }
+
+    public static float pxToDp(int dp){
+        Resources r = App.getApp().getResources();
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
     }
 
 }

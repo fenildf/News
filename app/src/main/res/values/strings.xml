@@ -25,4 +25,6 @@
     <string name="contacts_cleared">Contacts cleared</string>
     <string name="contacts_not_cleared">Contacts not cleared</string>
     <string name="dialog_delete_contact">Are you sure to delete contact</string>
+    <string name="additional">Additional</string>
+    <string name="news">News</string>
 </resources>

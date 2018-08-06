@@ -23,7 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ContactsListFragment extends Fragment  {
+public class ContactsListFragment extends Fragment {
 
     public final String TAG = this.getClass().getSimpleName();
 
@@ -31,10 +31,10 @@ public class ContactsListFragment extends Fragment  {
     FloatingActionButton fab;
     @BindView(R.id.rv_contact_list)
     RecyclerView contactsRecyclerView;
-    RecyclerView.LayoutManager layoutManager;
-    ContactsRecyclerViewAdapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private ContactsRecyclerViewAdapter adapter;
 
-    ContactsListPresenter presenter;
+    private ContactsListPresenter presenter;
 
     public interface ContactListListener {
         void addContact();
@@ -61,16 +61,17 @@ public class ContactsListFragment extends Fragment  {
         contactsRecyclerView.setLayoutManager(layoutManager);
     }
 
-    public void clearContactList(){
+    public void clearContactList() {
         adapter.clearList();
         adapter.notifyDataSetChanged();
     }
+
     public void updateContactList(List<Contact> contacts) {
         adapter.updateList(contacts);
         adapter.notifyDataSetChanged();
     }
 
-    public void refreshContacts(){
+    public void refreshContacts() {
         presenter.refreshContacts();
     }
 

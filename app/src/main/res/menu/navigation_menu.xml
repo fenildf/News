@@ -11,5 +11,12 @@
                     android:title="@string/add_contact" />
             </menu>
         </item>
+        <item android:title="@string/additional">
+            <menu>
+                <item
+                    android:id="@+id/menu_item_news"
+                    android:title="@string/news" />
+            </menu>
+        </item>
     </group>
 </menu>

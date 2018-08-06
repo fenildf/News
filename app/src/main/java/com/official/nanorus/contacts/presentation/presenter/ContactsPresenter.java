@@ -34,6 +34,9 @@ public class ContactsPresenter {
         view.showAddContact();
     }
 
+    public void onNewsMenuItemClicked() {
+        view.showNews();
+    }
     public void releasePresenter() {
         view = null;
     }
@@ -81,4 +84,5 @@ public class ContactsPresenter {
     public void onClearContactsClicked() {
         view.showClearContactsDialog();
     }
+
 }

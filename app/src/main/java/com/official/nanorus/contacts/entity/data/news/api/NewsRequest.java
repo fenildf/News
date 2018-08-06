@@ -13,7 +13,7 @@ public class NewsRequest {
     @SerializedName("totalResults")
     @Expose
     private int totalResults;
-    @SerializedName("newsArticles")
+    @SerializedName("articles")
     @Expose
     private List<NewsArticle> newsArticles = null;
 

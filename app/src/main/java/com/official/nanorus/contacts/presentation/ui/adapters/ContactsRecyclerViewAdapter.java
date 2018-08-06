@@ -38,14 +38,14 @@ public class ContactsRecyclerViewAdapter extends RecyclerView.Adapter<ContactsRe
         if (dataList != null)
             dataList.clear();
     }
+    public void updateList(List<Contact> list) {
+        dataList.addAll(0, list);
+    }
 
     public interface ContactsListListener {
         void onContactLongClicked(int id, String name);
     }
 
-    public void updateList(List<Contact> list) {
-        dataList.addAll(0, list);
-    }
 
     @NonNull
     @Override
