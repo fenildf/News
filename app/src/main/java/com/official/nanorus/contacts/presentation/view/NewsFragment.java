@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.official.nanorus.contacts.R;
 import com.official.nanorus.contacts.entity.data.news.News;
@@ -34,6 +35,8 @@ public class NewsFragment extends Fragment {
     private NewsRecyclerViewAdapter adapter;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.tv_no_news)
+    TextView noNewsTextView;
 
     private NewsPresenter presenter;
 
@@ -72,6 +75,11 @@ public class NewsFragment extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.onViewResume();
+    }
 
     @Override
     public void onDestroyView() {
@@ -110,5 +118,12 @@ public class NewsFragment extends Fragment {
         if (getActivity() instanceof NewsListener) {
             ((NewsListener) getActivity()).setTitle(title);
         }
+    }
+
+    public void showNoNews(boolean show) {
+        if (show)
+            noNewsTextView.setVisibility(View.VISIBLE);
+        else
+            noNewsTextView.setVisibility(View.INVISIBLE);
     }
 }

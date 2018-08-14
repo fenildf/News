@@ -10,6 +10,9 @@ import android.util.TypedValue;
 
 import com.official.nanorus.contacts.app.App;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.UUID;
 
 public class Utils {
@@ -27,7 +30,7 @@ public class Utils {
 
     }
 
-    public static String getRealPathFromURI( Uri contentUri) {
+    public static String getRealPathFromURI(Uri contentUri) {
         Cursor cursor = null;
         try {
             String[] proj = {MediaStore.Images.Media.DATA};
@@ -45,13 +48,27 @@ public class Utils {
         }
     }
 
-    public static float pxToDp(int dp){
+    public static float pxToDp(int dp) {
         Resources r = App.getApp().getResources();
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
     }
 
     public static boolean checkNetWorkError(Throwable throwable) {
         return throwable.toString().contains("Unable to resolve host");
+    }
+
+    public static String mapDate(String apiDate) {
+        String clearApiDate = apiDate.replace("T", ",")
+                .replace("Z", ";");
+        SimpleDateFormat fromUser = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss;", Locale.ENGLISH);
+        SimpleDateFormat myFormat = new SimpleDateFormat("EEEE, MMM dd, yyyy   HH:mm", Locale.ENGLISH);
+        String uiDate = "";
+        try {
+            uiDate = myFormat.format(fromUser.parse(clearApiDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return uiDate;
     }
 
 }

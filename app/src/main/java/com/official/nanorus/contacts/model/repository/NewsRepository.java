@@ -5,6 +5,7 @@ import com.official.nanorus.contacts.entity.data.news.News;
 import com.official.nanorus.contacts.entity.data.news.api.NewsArticle;
 import com.official.nanorus.contacts.entity.data.news.api.NewsRequest;
 import com.official.nanorus.contacts.model.data.AppPreferencesManager;
+import com.official.nanorus.contacts.model.data.Utils;
 import com.official.nanorus.contacts.model.data.api.NewsRetroClient;
 import com.official.nanorus.contacts.model.data.database.news.NewsDatabaseManager;
 
@@ -31,6 +32,7 @@ public class NewsRepository {
     }
 
     public void saveNewsToCache(List<News> newsList) {
+        databaseManager.clearNews();
         databaseManager.putNews(newsList);
     }
 
@@ -48,7 +50,7 @@ public class NewsRepository {
                 .flatMap((Function<List<NewsArticle>, Observable<NewsArticle>>) Observable::fromIterable)
                 .map(newsArticle ->
                         new News(newsArticle.getTitle(), newsArticle.getDescription(),
-                                newsArticle.getUrl(), newsArticle.getUrlToImage(), newsArticle.getPublishedAt()
+                                newsArticle.getUrl(), newsArticle.getUrlToImage(), Utils.mapDate(newsArticle.getPublishedAt())
                         ))
                 .subscribeOn(Schedulers.io());
     }

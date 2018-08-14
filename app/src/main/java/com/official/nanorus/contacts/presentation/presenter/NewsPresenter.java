@@ -52,23 +52,24 @@ public class NewsPresenter {
 
         newsDisponsable = newsObservable.subscribe(news -> {
                     Log.d(TAG, news.getTitle());
-                    view.clearNewsList();
                     newsList.add(news);
                 },
                 throwable -> {
                     Log.d(TAG, throwable.getMessage());
-                    if (Utils.checkNetWorkError(throwable)){
+                    if (Utils.checkNetWorkError(throwable)) {
                         Toaster.shortToast(resourceManager.getStringNoInternet());
-                    } else  {
+                    } else {
                         Toaster.shortToast(throwable.getMessage());
                     }
                     view.showLoading(false);
                 },
                 () -> {
+                    view.clearNewsList();
                     view.updateNewsList(newsList);
+                    view.showNoNews(newsList.isEmpty());
                     view.showLoading(false);
                     interactor.setQuery(query);
-                    view.setTitle("News: " + query);
+                    view.setTitle(resourceManager.getStringNews() + ": " + query);
                     interactor.saveNews(newsList);
                 }
         );
@@ -85,7 +86,6 @@ public class NewsPresenter {
         newsDisponsable = newsObservable.subscribe(
                 news -> {
                     Log.d(TAG, news.getTitle());
-                    view.clearNewsList();
                     newsList.add(news);
                 },
                 throwable -> {
@@ -93,9 +93,11 @@ public class NewsPresenter {
                     view.showLoading(false);
                 },
                 () -> {
+                    view.clearNewsList();
                     view.showLoading(false);
                     if (!newsList.isEmpty()) {
                         view.updateNewsList(newsList);
+                        view.setTitle(resourceManager.getStringNews() + ": " + interactor.getQuery());
                     } else {
                         String query = interactor.getQuery();
                         if (query != null && !query.equals("")) {
@@ -114,5 +116,11 @@ public class NewsPresenter {
 
     public void onSwipeRefresh() {
         getRefreshedNews(interactor.getQuery(), false);
+    }
+
+    public void onViewResume() {
+        String query = interactor.getQuery();
+        if (query != null && !query.equals(""))
+            view.setTitle(resourceManager.getStringNews() + ": " + interactor.getQuery());
     }
 }

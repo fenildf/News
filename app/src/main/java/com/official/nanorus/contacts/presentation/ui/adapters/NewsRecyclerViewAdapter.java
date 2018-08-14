@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.official.nanorus.contacts.R;
 import com.official.nanorus.contacts.entity.data.news.News;
+import com.official.nanorus.contacts.navigation.Router;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +29,12 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
 
     public final String TAG = this.getClass().getSimpleName();
 
-    List<News> dataList;
+    private List<News> dataList;
+    private Router router;
 
     public NewsRecyclerViewAdapter() {
         dataList = new ArrayList<>();
+        router = new Router();
     }
 
     @NonNull
@@ -47,6 +51,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         holder.descriptionTextView.setText(data.getDescription());
         holder.dateTextView.setText(data.getPublishedAt());
         holder.photoImageView.setVisibility(View.GONE);
+        holder.moreButton.setOnClickListener(view -> router.openUrlIntBrowser(data.getUrl(), holder.itemView.getContext()));
         if (data.getUrlToImage() != null) {
             holder.photoImageView.setVisibility(View.VISIBLE);
             Glide.with(holder.itemView.getContext())
@@ -91,6 +96,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         TextView dateTextView;
         TextView descriptionTextView;
         ImageView photoImageView;
+        Button moreButton;
 
         public NewsRecyclerViewHolder(View itemView) {
             super(itemView);
@@ -98,6 +104,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
             dateTextView = itemView.findViewById(R.id.tv_date);
             descriptionTextView = itemView.findViewById(R.id.tv_description);
             photoImageView = itemView.findViewById(R.id.iv_photo);
+            moreButton = itemView.findViewById(R.id.btn_more);
         }
     }
 }

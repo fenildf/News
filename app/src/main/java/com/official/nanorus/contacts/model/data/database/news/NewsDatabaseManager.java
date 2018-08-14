@@ -59,6 +59,12 @@ public class NewsDatabaseManager {
         }
         databaseHelper.closeDB();
     }
+
+    public void clearNews(){
+        SQLiteDatabase db = databaseHelper.getWritableDB();
+        db.delete(databaseContract.TABLE_NAME_NEWS, null, null);
+
+    }
     public Observable<List<News>> getNews() {
         Log.d(TAG, "getContacts()");
         return Observable.create(emitter -> {
