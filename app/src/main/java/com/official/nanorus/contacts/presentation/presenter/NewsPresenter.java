@@ -69,6 +69,7 @@ public class NewsPresenter {
                     view.showLoading(false);
                     interactor.setQuery(query);
                     view.setTitle("News: " + query);
+                    interactor.saveNews(newsList);
                 }
         );
     }

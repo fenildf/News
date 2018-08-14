@@ -3,6 +3,8 @@ package com.official.nanorus.contacts.model.domain;
 import com.official.nanorus.contacts.entity.data.news.News;
 import com.official.nanorus.contacts.model.repository.NewsRepository;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 
 
@@ -28,5 +30,9 @@ public class NewsInteractor {
 
     public void setQuery(String query) {
         repository.setQuery(query);
+    }
+
+    public void saveNews(List<News> newsList) {
+        repository.saveNewsToCache(newsList);
     }
 }

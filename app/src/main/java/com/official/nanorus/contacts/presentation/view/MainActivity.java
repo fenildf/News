@@ -81,19 +81,19 @@ public class MainActivity extends AppCompatActivity implements ContactsListFragm
     @Override
     protected void onResume() {
         super.onResume();
-        updateUI();
+        updateTitle();
         presenter.bindView(this);
     }
 
     public void showContacts() {
         if (attachedFragment != FRAGMENT_CONTACTS_LIST) {
-            setTitle(getString(R.string.contacts));
             fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
             fragmentTransaction.replace(R.id.frame, contactsListFragment, FRAGMENT_CONTACTS_LIST_TAG);
             fragmentTransaction.commit();
             attachedFragment = FRAGMENT_CONTACTS_LIST;
-            updateUI();
+            updateTitle();
+            updateToolbarIcons();
         } else {
             contactsListFragment = (ContactsListFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_CONTACTS_LIST_TAG);
         }
@@ -101,13 +101,13 @@ public class MainActivity extends AppCompatActivity implements ContactsListFragm
 
     public void showAddContact() {
         if (attachedFragment != FRAGMENT_ADD_CONTACT) {
-            setTitle(getString(R.string.add_contact));
             fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             fragmentTransaction.replace(R.id.frame, addContactFragment, FRAGMENT_ADD_CONTACT_TAG);
             fragmentTransaction.commit();
             attachedFragment = FRAGMENT_ADD_CONTACT;
-            updateUI();
+            updateTitle();
+            updateToolbarIcons();
         } else {
             addContactFragment = (AddContactFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_ADD_CONTACT_TAG);
         }
@@ -115,19 +115,19 @@ public class MainActivity extends AppCompatActivity implements ContactsListFragm
 
     public void showNews() {
         if (attachedFragment != FRAGMENT_NEWS) {
-            setTitle(getString(R.string.news));
             fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             fragmentTransaction.replace(R.id.frame, newsFragment, FRAGMENT_NEWS_TAG);
             fragmentTransaction.commit();
             attachedFragment = FRAGMENT_NEWS;
-            updateUI();
+            updateTitle();
+            updateToolbarIcons();
         } else {
             newsFragment = (NewsFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_NEWS_TAG);
         }
     }
 
-    public void updateUI() {
+    public void updateToolbarIcons() {
         if (attachedFragment == FRAGMENT_CONTACTS_LIST) {
             if (deleteMenuItem != null)
                 deleteMenuItem.setVisible(true);
@@ -146,6 +146,15 @@ public class MainActivity extends AppCompatActivity implements ContactsListFragm
         }
     }
 
+    public void updateTitle() {
+        if (attachedFragment == FRAGMENT_CONTACTS_LIST) {
+            setTitle(getString(R.string.contacts));
+        } else if (attachedFragment == FRAGMENT_ADD_CONTACT) {
+            setTitle(getString(R.string.add_contact));
+        } else if (attachedFragment == FRAGMENT_NEWS) {
+            setTitle(getString(R.string.news));
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -289,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements ContactsListFragm
         getMenuInflater().inflate(R.menu.contacts_toolbar_menu, menu);
         deleteMenuItem = menu.findItem(R.id.clear_contacts);
         searchNewsMenuItem = menu.findItem(R.id.search_news);
-        updateUI();
+        updateToolbarIcons();
         return super.onCreateOptionsMenu(menu);
     }
 

@@ -30,6 +30,10 @@ public class NewsRepository {
         return databaseManager.getNews().concatMapIterable(newsList -> newsList);
     }
 
+    public void saveNewsToCache(List<News> newsList) {
+        databaseManager.putNews(newsList);
+    }
+
     public Observable<News> getRefreshedNews(String query, boolean fromCache) {
         return (Observable<News>) retroClient.getPreparedObservable(
                 getApiNews(query),
@@ -56,4 +60,5 @@ public class NewsRepository {
     public void setQuery(String query) {
         preferencesManager.setNewsQuery(query);
     }
+
 }
