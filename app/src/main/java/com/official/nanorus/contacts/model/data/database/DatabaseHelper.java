@@ -1,18 +1,20 @@
 package com.official.nanorus.contacts.model.data.database;
 
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.official.nanorus.contacts.app.App;
+import com.official.nanorus.contacts.model.data.database.contacts.ContactsDatabaseContract;
+import com.official.nanorus.contacts.model.data.database.news.NewsDatabaseContract;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static DatabaseHelper instance;
 
-    private DatabaseContract databaseContract;
+    private ContactsDatabaseContract contactsDatabaseContract;
+    private NewsDatabaseContract newsDatabaseContract;
     private static final String DB_NAME = "Database.db";
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 3;
     public static int DBConnectionsCount = 0;
 
 
@@ -25,19 +27,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public DatabaseHelper() {
         super(App.getApp().getApplicationContext(), DB_NAME, null, DB_VERSION);
-        this.databaseContract = new DatabaseContract();
-
+        this.contactsDatabaseContract = new ContactsDatabaseContract();
+        this.newsDatabaseContract = new NewsDatabaseContract();
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(databaseContract.SQL_CREATE_TABLE_CONTACTS);
+        sqLiteDatabase.execSQL(contactsDatabaseContract.SQL_CREATE_TABLE_CONTACTS);
+        sqLiteDatabase.execSQL(newsDatabaseContract.SQL_CREATE_TABLE_NEWS);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        if (i == 1 && i1 == 2) {
-            sqLiteDatabase.execSQL("ALTER TABLE " + databaseContract.TABLE_NAME_CONTACTS + " ADD COLUMN " + databaseContract.COLUMN_NAME_CONTACTS_IMAGE + " TEXT");
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        if (oldVersion == 1 && newVersion == 2) {
+            sqLiteDatabase.execSQL("ALTER TABLE " + contactsDatabaseContract.TABLE_NAME_CONTACTS + " ADD COLUMN " + contactsDatabaseContract.COLUMN_NAME_CONTACTS_IMAGE + " TEXT");
+            sqLiteDatabase.execSQL(newsDatabaseContract.SQL_CREATE_TABLE_NEWS);
+        }
+        if (oldVersion == 2 && newVersion == 3) {
+            sqLiteDatabase.execSQL(newsDatabaseContract.SQL_CREATE_TABLE_NEWS);
         }
     }
 

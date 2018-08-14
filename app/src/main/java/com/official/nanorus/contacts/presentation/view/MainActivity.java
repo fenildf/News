@@ -17,13 +17,13 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.official.nanorus.contacts.R;
-import com.official.nanorus.contacts.presentation.presenter.ContactsPresenter;
+import com.official.nanorus.contacts.presentation.presenter.MainPresenter;
 import com.official.nanorus.contacts.presentation.ui.adapters.ContactsRecyclerViewAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ContactsActivity extends AppCompatActivity implements ContactsListFragment.ContactListListener, ContactsRecyclerViewAdapter.ContactsListListener {
+public class MainActivity extends AppCompatActivity implements ContactsListFragment.ContactListListener, ContactsRecyclerViewAdapter.ContactsListListener, NewsFragment.NewsListener {
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -48,8 +48,9 @@ public class ContactsActivity extends AppCompatActivity implements ContactsListF
     ConstraintLayout navigationHeader;
     ActionBarDrawerToggle drawerToggle;
     MenuItem deleteMenuItem;
+    MenuItem searchNewsMenuItem;
 
-    ContactsPresenter presenter;
+    MainPresenter presenter;
 
     ContactsListFragment contactsListFragment;
     AddContactFragment addContactFragment;
@@ -72,15 +73,21 @@ public class ContactsActivity extends AppCompatActivity implements ContactsListF
         addContactFragment = new AddContactFragment();
         newsFragment = new NewsFragment();
 
-
         setupNavigationDrawer();
 
-        presenter = new ContactsPresenter();
+        presenter = new MainPresenter();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateUI();
         presenter.bindView(this);
     }
 
     public void showContacts() {
         if (attachedFragment != FRAGMENT_CONTACTS_LIST) {
+            setTitle(getString(R.string.contacts));
             fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
             fragmentTransaction.replace(R.id.frame, contactsListFragment, FRAGMENT_CONTACTS_LIST_TAG);
@@ -94,6 +101,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsListF
 
     public void showAddContact() {
         if (attachedFragment != FRAGMENT_ADD_CONTACT) {
+            setTitle(getString(R.string.add_contact));
             fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             fragmentTransaction.replace(R.id.frame, addContactFragment, FRAGMENT_ADD_CONTACT_TAG);
@@ -107,6 +115,7 @@ public class ContactsActivity extends AppCompatActivity implements ContactsListF
 
     public void showNews() {
         if (attachedFragment != FRAGMENT_NEWS) {
+            setTitle(getString(R.string.news));
             fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             fragmentTransaction.replace(R.id.frame, newsFragment, FRAGMENT_NEWS_TAG);
@@ -122,12 +131,18 @@ public class ContactsActivity extends AppCompatActivity implements ContactsListF
         if (attachedFragment == FRAGMENT_CONTACTS_LIST) {
             if (deleteMenuItem != null)
                 deleteMenuItem.setVisible(true);
+            if (searchNewsMenuItem != null)
+                searchNewsMenuItem.setVisible(false);
         } else if (attachedFragment == FRAGMENT_ADD_CONTACT) {
             if (deleteMenuItem != null)
                 deleteMenuItem.setVisible(false);
+            if (searchNewsMenuItem != null)
+                searchNewsMenuItem.setVisible(false);
         } else if (attachedFragment == FRAGMENT_NEWS) {
             if (deleteMenuItem != null)
                 deleteMenuItem.setVisible(false);
+            if (searchNewsMenuItem != null)
+                searchNewsMenuItem.setVisible(true);
         }
     }
 
@@ -140,6 +155,9 @@ public class ContactsActivity extends AppCompatActivity implements ContactsListF
         switch (item.getItemId()) {
             case R.id.clear_contacts:
                 presenter.onClearContactsClicked();
+                break;
+            case R.id.search_news:
+                presenter.onSearchNewsClicked();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -183,14 +201,17 @@ public class ContactsActivity extends AppCompatActivity implements ContactsListF
                 case R.id.menu_item_contacts:
                     presenter.onContactsListMenuItemClicked();
                     selectedMenuItem = FRAGMENT_CONTACTS_LIST;
+                    presenter.saveMenuState(selectedMenuItem);
                     break;
                 case R.id.menu_item_add_contact:
                     presenter.onAddContactMenuItemClicked();
                     selectedMenuItem = FRAGMENT_ADD_CONTACT;
+                    presenter.saveMenuState(selectedMenuItem);
                     break;
                 case R.id.menu_item_news:
                     presenter.onNewsMenuItemClicked();
                     selectedMenuItem = FRAGMENT_NEWS;
+                    presenter.saveMenuState(selectedMenuItem);
                     break;
             }
             drawerLayout.closeDrawers();
@@ -226,7 +247,6 @@ public class ContactsActivity extends AppCompatActivity implements ContactsListF
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        presenter.saveMenuState(selectedMenuItem);
         presenter.releasePresenter();
         presenter = null;
     }
@@ -268,9 +288,19 @@ public class ContactsActivity extends AppCompatActivity implements ContactsListF
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.contacts_toolbar_menu, menu);
         deleteMenuItem = menu.findItem(R.id.clear_contacts);
+        searchNewsMenuItem = menu.findItem(R.id.search_news);
         updateUI();
         return super.onCreateOptionsMenu(menu);
     }
 
 
+    public void showSearchNewsDialog() {
+        if (newsFragment != null)
+            newsFragment.showQueryDialog();
+    }
+
+    @Override
+    public void setTitle(String title) {
+        getSupportActionBar().setTitle(title);
+    }
 }

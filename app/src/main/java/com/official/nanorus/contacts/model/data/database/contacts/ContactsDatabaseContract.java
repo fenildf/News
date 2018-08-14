@@ -1,6 +1,6 @@
-package com.official.nanorus.contacts.model.data.database;
+package com.official.nanorus.contacts.model.data.database.contacts;
 
-public class DatabaseContract {
+public class ContactsDatabaseContract {
 
     public final String TABLE_NAME_CONTACTS = "contacts";
     public final String COLUMN_NAME_CONTACTS_NAME = "name";
@@ -23,7 +23,7 @@ public class DatabaseContract {
             COLUMN_NAME_CONTACTS_IMAGE + " TEXT" +
             ")";
 
-    public final String SQL_DELETE_TABLE_WEATHER = "DROP TABLE IF EXISTS " + TABLE_NAME_CONTACTS;
+    public final String SQL_DELETE_TABLE_CONTACTS = "DROP TABLE IF EXISTS " + TABLE_NAME_CONTACTS;
 
 
 }

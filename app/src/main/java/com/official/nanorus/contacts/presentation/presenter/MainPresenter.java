@@ -1,29 +1,31 @@
 package com.official.nanorus.contacts.presentation.presenter;
 
 import com.official.nanorus.contacts.model.data.ResourceManager;
-import com.official.nanorus.contacts.model.data.database.DatabaseManager;
+import com.official.nanorus.contacts.model.data.SuccessListener;
 import com.official.nanorus.contacts.model.domain.ContactsInteractor;
 import com.official.nanorus.contacts.presentation.ui.Toaster;
-import com.official.nanorus.contacts.presentation.view.ContactsActivity;
+import com.official.nanorus.contacts.presentation.view.MainActivity;
 
-public class ContactsPresenter {
+public class MainPresenter {
 
-    private ContactsActivity view;
+    private MainActivity view;
     private ContactsInteractor interactor;
     private ResourceManager resourceManager;
 
-    public ContactsPresenter() {
+    public MainPresenter() {
         interactor = ContactsInteractor.getInstance();
         resourceManager = new ResourceManager();
     }
 
-    public void bindView(ContactsActivity view) {
+    public void bindView(MainActivity view) {
         this.view = view;
         view.setSelectedMenuItem(interactor.getLastMenuItem());
-        if (interactor.getLastMenuItem() == ContactsActivity.FRAGMENT_CONTACTS_LIST) {
+        if (interactor.getLastMenuItem() == MainActivity.FRAGMENT_CONTACTS_LIST)
             onContactsListMenuItemClicked();
-        } else if (interactor.getLastMenuItem() == ContactsActivity.FRAGMENT_ADD_CONTACT)
+        else if (interactor.getLastMenuItem() == MainActivity.FRAGMENT_ADD_CONTACT)
             onAddContactMenuItemClicked();
+        else if (interactor.getLastMenuItem() == MainActivity.FRAGMENT_NEWS)
+            onNewsMenuItemClicked();
     }
 
     public void onContactsListMenuItemClicked() {
@@ -37,6 +39,7 @@ public class ContactsPresenter {
     public void onNewsMenuItemClicked() {
         view.showNews();
     }
+
     public void releasePresenter() {
         view = null;
     }
@@ -46,7 +49,7 @@ public class ContactsPresenter {
     }
 
     public void onContactSelectedAction(int id) {
-        DatabaseManager.SuccessListener successListener = new DatabaseManager.SuccessListener() {
+        SuccessListener successListener = new SuccessListener() {
             @Override
             public void onSuccess() {
                 Toaster.shortToast(resourceManager.getStringContactDeleted());
@@ -66,7 +69,7 @@ public class ContactsPresenter {
     }
 
     public void onClearContactsAction() {
-        DatabaseManager.SuccessListener successListener = new DatabaseManager.SuccessListener() {
+        SuccessListener successListener = new SuccessListener() {
             @Override
             public void onSuccess() {
                 Toaster.shortToast(resourceManager.getStringContactsCleared());
@@ -85,4 +88,7 @@ public class ContactsPresenter {
         view.showClearContactsDialog();
     }
 
+    public void onSearchNewsClicked() {
+        view.showSearchNewsDialog();
+    }
 }

@@ -4,7 +4,9 @@ package com.official.nanorus.contacts.model.repository;
 import com.official.nanorus.contacts.entity.data.news.News;
 import com.official.nanorus.contacts.entity.data.news.api.NewsArticle;
 import com.official.nanorus.contacts.entity.data.news.api.NewsRequest;
+import com.official.nanorus.contacts.model.data.AppPreferencesManager;
 import com.official.nanorus.contacts.model.data.api.NewsRetroClient;
+import com.official.nanorus.contacts.model.data.database.news.NewsDatabaseManager;
 
 import java.util.List;
 
@@ -15,15 +17,23 @@ import io.reactivex.schedulers.Schedulers;
 public class NewsRepository {
 
     private NewsRetroClient retroClient;
+    private NewsDatabaseManager databaseManager;
+    private AppPreferencesManager preferencesManager;
 
     public NewsRepository() {
         retroClient = NewsRetroClient.getInstance();
+        preferencesManager = AppPreferencesManager.getInstance();
+        databaseManager = NewsDatabaseManager.getInstance();
     }
 
-    public Observable<News> getRefreshedNews(String query) {
+    public Observable<News> getCachedNews() {
+        return databaseManager.getNews().concatMapIterable(newsList -> newsList);
+    }
+
+    public Observable<News> getRefreshedNews(String query, boolean fromCache) {
         return (Observable<News>) retroClient.getPreparedObservable(
                 getApiNews(query),
-                News.class, true, true
+                News.class, true, fromCache
         );
     }
 
@@ -34,8 +44,16 @@ public class NewsRepository {
                 .flatMap((Function<List<NewsArticle>, Observable<NewsArticle>>) Observable::fromIterable)
                 .map(newsArticle ->
                         new News(newsArticle.getTitle(), newsArticle.getDescription(),
-                                newsArticle.getUrl(), newsArticle.getUrlToImage(), newsArticle.getPublishedAt()))
+                                newsArticle.getUrl(), newsArticle.getUrlToImage(), newsArticle.getPublishedAt()
+                        ))
                 .subscribeOn(Schedulers.io());
     }
 
+    public String getQuery() {
+        return preferencesManager.getNewsQuery();
+    }
+
+    public void setQuery(String query) {
+        preferencesManager.setNewsQuery(query);
+    }
 }

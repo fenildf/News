@@ -10,12 +10,23 @@ public class NewsInteractor {
 
     private NewsRepository repository;
 
-    public NewsInteractor(){
+    public NewsInteractor() {
         repository = new NewsRepository();
     }
 
-    public Observable<News> getRefreshedNews(String query){
-       return repository.getRefreshedNews(query);
+    public Observable<News> getRefreshedNews(String query, boolean fromCache) {
+        return repository.getRefreshedNews(query, fromCache);
     }
 
+    public Observable<News> getNews() {
+        return repository.getCachedNews();
+    }
+
+    public String getQuery() {
+        return repository.getQuery();
+    }
+
+    public void setQuery(String query) {
+        repository.setQuery(query);
+    }
 }

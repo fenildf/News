@@ -133,7 +133,7 @@ public class AddContactFragment extends Fragment {
         if (getActivity() != null)
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    ContactsActivity.MY_PERMISSIONS_REQUEST_WRITE_SD);
+                    MainActivity.MY_PERMISSIONS_REQUEST_WRITE_SD);
     }
 
     @Override

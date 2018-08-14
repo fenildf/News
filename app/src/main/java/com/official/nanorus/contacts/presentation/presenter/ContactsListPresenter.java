@@ -3,6 +3,7 @@ package com.official.nanorus.contacts.presentation.presenter;
 import android.util.Log;
 
 import com.official.nanorus.contacts.entity.data.contact.Contact;
+import com.official.nanorus.contacts.model.data.ResourceManager;
 import com.official.nanorus.contacts.model.domain.ContactsInteractor;
 import com.official.nanorus.contacts.presentation.view.ContactsListFragment;
 
@@ -21,10 +22,12 @@ public class ContactsListPresenter {
     private ContactsListFragment view;
     private Observable<List<Contact>> contactsObservable;
     private Disposable contactsDisponsable;
+    private ResourceManager resourceManager;
 
     public ContactsListPresenter() {
         interactor = ContactsInteractor.getInstance();
         contactsObservable = interactor.getContacts().observeOn(AndroidSchedulers.mainThread());
+        resourceManager = new ResourceManager();
     }
 
     public void bindView(ContactsListFragment view) {

@@ -2,8 +2,8 @@ package com.official.nanorus.contacts.presentation.presenter;
 
 import com.official.nanorus.contacts.entity.data.contact.Contact;
 import com.official.nanorus.contacts.model.data.ResourceManager;
+import com.official.nanorus.contacts.model.data.SuccessListener;
 import com.official.nanorus.contacts.model.data.Utils;
-import com.official.nanorus.contacts.model.data.database.DatabaseManager;
 import com.official.nanorus.contacts.model.domain.ContactsInteractor;
 import com.official.nanorus.contacts.presentation.ui.Toaster;
 import com.official.nanorus.contacts.presentation.view.AddContactFragment;
@@ -31,7 +31,7 @@ public class AddContactPresenter {
         } else {
             this.photoFileName = Utils.generateRandomString();
             contact.setImage(photoFileName);
-            interactor.addContact(contact, new DatabaseManager.SuccessListener() {
+            interactor.addContact(contact, new SuccessListener() {
                 @Override
                 public void onSuccess() {
                     if (AddContactPresenter.this.image != null) {

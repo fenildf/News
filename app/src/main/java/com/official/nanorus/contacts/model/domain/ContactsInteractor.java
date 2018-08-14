@@ -1,7 +1,7 @@
 package com.official.nanorus.contacts.model.domain;
 
 import com.official.nanorus.contacts.entity.data.contact.Contact;
-import com.official.nanorus.contacts.model.data.database.DatabaseManager;
+import com.official.nanorus.contacts.model.data.SuccessListener;
 import com.official.nanorus.contacts.model.repository.ContactsRepository;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class ContactsInteractor {
         return repository.getContacts();
     }
 
-    public void addContact(Contact contact, DatabaseManager.SuccessListener successListener) {
+    public void addContact(Contact contact, SuccessListener successListener) {
         repository.addContact(contact, successListener);
     }
 
@@ -44,11 +44,11 @@ public class ContactsInteractor {
         repository.setLastMenuItem(item);
     }
 
-    public void deleteContact(int id, DatabaseManager.SuccessListener successListener) {
+    public void deleteContact(int id, SuccessListener successListener) {
         repository.deleteContact(id, successListener);
     }
 
-    public void clearContacts(DatabaseManager.SuccessListener successListener) {
+    public void clearContacts(SuccessListener successListener) {
         repository.clearContacts(successListener);
     }
 }

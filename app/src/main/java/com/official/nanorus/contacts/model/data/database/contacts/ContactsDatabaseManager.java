@@ -1,4 +1,4 @@
-package com.official.nanorus.contacts.model.data.database;
+package com.official.nanorus.contacts.model.data.database.contacts;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.official.nanorus.contacts.entity.data.contact.Contact;
+import com.official.nanorus.contacts.model.data.SuccessListener;
+import com.official.nanorus.contacts.model.data.database.DatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +15,10 @@ import java.util.List;
 import io.reactivex.Observable;
 
 
-public class DatabaseManager {
-    private static DatabaseManager instance;
+public class ContactsDatabaseManager {
+    private static ContactsDatabaseManager instance;
     private DatabaseHelper databaseHelper;
-    private DatabaseContract databaseContract;
+    private ContactsDatabaseContract databaseContract;
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -41,23 +43,15 @@ public class DatabaseManager {
         databaseHelper.closeDB();
     }
 
-    public interface SuccessListener {
-
-        void onSuccess();
-
-        void onFail();
-
-    }
-
-    public static DatabaseManager getInstance() {
+    public static ContactsDatabaseManager getInstance() {
         if (instance == null)
-            instance = new DatabaseManager();
+            instance = new ContactsDatabaseManager();
         return instance;
     }
 
-    public DatabaseManager() {
+    public ContactsDatabaseManager() {
         databaseHelper = DatabaseHelper.getInstance();
-        databaseContract = new DatabaseContract();
+        databaseContract = new ContactsDatabaseContract();
     }
 
     public Observable<List<Contact>> getContacts() {

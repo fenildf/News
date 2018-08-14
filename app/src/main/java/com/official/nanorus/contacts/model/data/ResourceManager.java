@@ -128,4 +128,12 @@ public class ResourceManager {
     public String getStringContactsNotCleared() {
         return context.getString(R.string.contacts_not_cleared);
     }
+
+    public String getStringNews(){
+        return context.getString(R.string.news);
+    }
+
+    public String getStringNoInternet(){
+        return context.getString(R.string.no_internet);
+    }
 }

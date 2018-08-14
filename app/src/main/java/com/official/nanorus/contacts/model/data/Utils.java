@@ -50,4 +50,8 @@ public class Utils {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
     }
 
+    public static boolean checkNetWorkError(Throwable throwable) {
+        return throwable.toString().contains("Unable to resolve host");
+    }
+
 }

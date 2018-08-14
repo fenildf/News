@@ -36,4 +36,14 @@ public class AppPreferencesManager {
         return preferences;
     }
 
+    public String getNewsQuery(){
+        return getPreferences().getString("news_query", null);
+    }
+
+    public void setNewsQuery (String query){
+        SharedPreferences.Editor editor = getPreferences().edit();
+        editor.putString("news_query", query);
+        editor.apply();
+    }
+
 }

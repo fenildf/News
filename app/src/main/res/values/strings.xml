@@ -27,4 +27,7 @@
     <string name="dialog_delete_contact">Are you sure to delete contact</string>
     <string name="additional">Additional</string>
     <string name="news">News</string>
+    <string name="enter_news_query">Enter news query</string>
+    <string name="search">Search</string>
+    <string name="no_internet">Check your internet connection :)</string>
 </resources>
