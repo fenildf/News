@@ -1,4 +1,4 @@
-package com.official.nanorus.contacts.presentation.view;
+package com.official.nanorus.contacts.presentation.view.main;
 
 import android.app.AlertDialog;
 import android.content.pm.PackageManager;
@@ -19,11 +19,14 @@ import android.widget.FrameLayout;
 import com.official.nanorus.contacts.R;
 import com.official.nanorus.contacts.presentation.presenter.MainPresenter;
 import com.official.nanorus.contacts.presentation.ui.adapters.ContactsRecyclerViewAdapter;
+import com.official.nanorus.contacts.presentation.view.news.NewsFragment;
+import com.official.nanorus.contacts.presentation.view.add_contact.AddContactFragment;
+import com.official.nanorus.contacts.presentation.view.contact_list.ContactsListFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements ContactsListFragment.ContactListListener, ContactsRecyclerViewAdapter.ContactsListListener, NewsFragment.NewsListener {
+public class MainActivity extends AppCompatActivity implements IMainView,ContactsListFragment.ContactListListener, ContactsRecyclerViewAdapter.ContactsListListener, NewsFragment.NewsListener {
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -85,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements ContactsListFragm
         presenter.bindView(this);
     }
 
+    @Override
     public void showContacts() {
         if (attachedFragment != FRAGMENT_CONTACTS_LIST) {
             fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -113,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements ContactsListFragm
         }
     }
 
+    @Override
     public void showNews() {
         if (attachedFragment != FRAGMENT_NEWS) {
             fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -243,6 +248,7 @@ public class MainActivity extends AppCompatActivity implements ContactsListFragm
         }
     }
 
+    @Override
     public void setSelectedMenuItem(int item) {
         selectedMenuItem = item;
     }
@@ -267,6 +273,7 @@ public class MainActivity extends AppCompatActivity implements ContactsListFragm
         presenter.onAddContactMenuItemClicked();
     }
 
+    @Override
     public void showDeleteContactDialog(int id, String name) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.dialog_delete_contact) + " " + name + "?")
@@ -280,6 +287,7 @@ public class MainActivity extends AppCompatActivity implements ContactsListFragm
         presenter.onContactSelected(id, name);
     }
 
+    @Override
     public void showClearContactsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.dialog_clear_contacts))
@@ -288,6 +296,7 @@ public class MainActivity extends AppCompatActivity implements ContactsListFragm
         builder.show();
     }
 
+    @Override
     public void refreshContacts() {
         if (contactsListFragment != null)
             contactsListFragment.refreshContacts();
@@ -303,6 +312,7 @@ public class MainActivity extends AppCompatActivity implements ContactsListFragm
     }
 
 
+    @Override
     public void showSearchNewsDialog() {
         if (newsFragment != null)
             newsFragment.showQueryDialog();

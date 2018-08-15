@@ -1,4 +1,4 @@
-package com.official.nanorus.contacts.presentation.view;
+package com.official.nanorus.contacts.presentation.view.news;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -25,7 +25,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class NewsFragment extends Fragment {
+public class NewsFragment extends Fragment implements INewsView {
 
     public final String TAG = this.getClass().getSimpleName();
 
@@ -65,11 +65,13 @@ public class NewsFragment extends Fragment {
         newsRecyclerView.setLayoutManager(layoutManager);
     }
 
+    @Override
     public void clearNewsList() {
         adapter.clearList();
         adapter.notifyDataSetChanged();
     }
 
+    @Override
     public void updateNewsList(List<News> news) {
         adapter.updateList(news);
         adapter.notifyDataSetChanged();
@@ -93,10 +95,12 @@ public class NewsFragment extends Fragment {
         super.onDestroy();
     }
 
+    @Override
     public void showEnterQuery() {
         showQueryDialog();
     }
 
+    @Override
     public void showLoading(boolean show) {
         swipeRefreshLayout.setRefreshing(show);
     }
@@ -114,12 +118,14 @@ public class NewsFragment extends Fragment {
         builder.show();
     }
 
+    @Override
     public void setTitle(String title) {
         if (getActivity() instanceof NewsListener) {
             ((NewsListener) getActivity()).setTitle(title);
         }
     }
 
+    @Override
     public void showNoNews(boolean show) {
         if (show)
             noNewsTextView.setVisibility(View.VISIBLE);

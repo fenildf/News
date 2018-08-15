@@ -6,11 +6,11 @@ import com.official.nanorus.contacts.model.data.SuccessListener;
 import com.official.nanorus.contacts.model.data.Utils;
 import com.official.nanorus.contacts.model.domain.ContactsInteractor;
 import com.official.nanorus.contacts.presentation.ui.Toaster;
-import com.official.nanorus.contacts.presentation.view.AddContactFragment;
+import com.official.nanorus.contacts.presentation.view.add_contact.IAddContactView;
 
 public class AddContactPresenter {
 
-    private AddContactFragment view;
+    private IAddContactView view;
     private ContactsInteractor interactor;
     private ResourceManager resourceManager;
     private String image;
@@ -21,7 +21,7 @@ public class AddContactPresenter {
         resourceManager = new ResourceManager();
     }
 
-    public void bindView(AddContactFragment view) {
+    public void bindView(IAddContactView view) {
         this.view = view;
     }
 

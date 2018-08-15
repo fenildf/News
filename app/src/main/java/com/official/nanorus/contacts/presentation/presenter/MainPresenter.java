@@ -4,11 +4,12 @@ import com.official.nanorus.contacts.model.data.ResourceManager;
 import com.official.nanorus.contacts.model.data.SuccessListener;
 import com.official.nanorus.contacts.model.domain.ContactsInteractor;
 import com.official.nanorus.contacts.presentation.ui.Toaster;
-import com.official.nanorus.contacts.presentation.view.MainActivity;
+import com.official.nanorus.contacts.presentation.view.main.IMainView;
+import com.official.nanorus.contacts.presentation.view.main.MainActivity;
 
 public class MainPresenter {
 
-    private MainActivity view;
+    private IMainView view;
     private ContactsInteractor interactor;
     private ResourceManager resourceManager;
 
@@ -17,7 +18,7 @@ public class MainPresenter {
         resourceManager = new ResourceManager();
     }
 
-    public void bindView(MainActivity view) {
+    public void bindView(IMainView view) {
         this.view = view;
         view.setSelectedMenuItem(interactor.getLastMenuItem());
         if (interactor.getLastMenuItem() == MainActivity.FRAGMENT_CONTACTS_LIST)

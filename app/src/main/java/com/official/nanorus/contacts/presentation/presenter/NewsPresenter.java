@@ -7,7 +7,7 @@ import com.official.nanorus.contacts.model.data.ResourceManager;
 import com.official.nanorus.contacts.model.data.Utils;
 import com.official.nanorus.contacts.model.domain.NewsInteractor;
 import com.official.nanorus.contacts.presentation.ui.Toaster;
-import com.official.nanorus.contacts.presentation.view.NewsFragment;
+import com.official.nanorus.contacts.presentation.view.news.INewsView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class NewsPresenter {
     public final String TAG = this.getClass().getSimpleName();
 
     private NewsInteractor interactor;
-    private NewsFragment view;
+    private INewsView view;
     private Observable<News> newsObservable;
     private Disposable newsDisponsable;
     private ResourceManager resourceManager;
@@ -30,7 +30,7 @@ public class NewsPresenter {
         resourceManager = new ResourceManager();
     }
 
-    public void bindView(NewsFragment view) {
+    public void bindView(INewsView view) {
         this.view = view;
         getNews();
     }

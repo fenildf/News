@@ -1,4 +1,4 @@
-package com.official.nanorus.contacts.presentation.view;
+package com.official.nanorus.contacts.presentation.view.contact_list;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,7 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ContactsListFragment extends Fragment {
+public class ContactsListFragment extends Fragment implements IContactsListView {
 
     public final String TAG = this.getClass().getSimpleName();
 
@@ -61,11 +61,13 @@ public class ContactsListFragment extends Fragment {
         contactsRecyclerView.setLayoutManager(layoutManager);
     }
 
+    @Override
     public void clearContactList() {
         adapter.clearList();
         adapter.notifyDataSetChanged();
     }
 
+    @Override
     public void updateContactList(List<Contact> contacts) {
         adapter.updateList(contacts);
         adapter.notifyDataSetChanged();
@@ -75,6 +77,7 @@ public class ContactsListFragment extends Fragment {
         presenter.refreshContacts();
     }
 
+    @Override
     public void addContact() {
         try {
             ((ContactListListener) getActivity()).addContact();

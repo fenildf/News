@@ -39,7 +39,6 @@ public class NewsRetroClient {
             apiObservables.put(clazz, preparedObservable);
         }
 
-
         return preparedObservable;
     }
 
@@ -68,5 +67,4 @@ public class NewsRetroClient {
     public NewsService getNewsService() {
         return getRetrofit().create(NewsService.class);
     }
-
 }

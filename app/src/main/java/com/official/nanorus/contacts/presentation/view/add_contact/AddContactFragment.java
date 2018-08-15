@@ -1,4 +1,4 @@
-package com.official.nanorus.contacts.presentation.view;
+package com.official.nanorus.contacts.presentation.view.add_contact;
 
 import android.Manifest;
 import android.app.Activity;
@@ -25,12 +25,13 @@ import com.official.nanorus.contacts.R;
 import com.official.nanorus.contacts.entity.data.contact.Contact;
 import com.official.nanorus.contacts.model.data.Utils;
 import com.official.nanorus.contacts.presentation.presenter.AddContactPresenter;
+import com.official.nanorus.contacts.presentation.view.main.MainActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddContactFragment extends Fragment {
+public class AddContactFragment extends Fragment implements IAddContactView{
 
     public static final String SAVE_INSTANCE_CONTACT = "contact";
     private static final int REQUEST_CODE_IMAGE = 100;
@@ -88,6 +89,7 @@ public class AddContactFragment extends Fragment {
         presenter.onImageClick();
     }
 
+    @Override
     public void setFields(Contact contact) {
         nameEditText.setText(contact.getName());
         surnameEditText.setText(contact.getSurname());
@@ -96,6 +98,7 @@ public class AddContactFragment extends Fragment {
         phoneEditText.setText(contact.getPhone());
     }
 
+    @Override
     public void clearFields() {
         nameEditText.setText("");
         surnameEditText.setText("");
@@ -104,11 +107,13 @@ public class AddContactFragment extends Fragment {
         emailEditText.setText("");
     }
 
+    @Override
     public void chooseImage() {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(photoPickerIntent, REQUEST_CODE_IMAGE);
     }
 
+    @Override
     public void setImage(String image) {
         Glide.with(this).load(image)
                 .apply(RequestOptions.bitmapTransform(new CircleCrop())
@@ -119,6 +124,7 @@ public class AddContactFragment extends Fragment {
                 .into(photoImageView);
     }
 
+    @Override
     public void resetImage() {
         Glide.with(this).load(R.drawable.ic_no_photo)
                 .apply(RequestOptions.bitmapTransform(new CircleCrop()))
@@ -129,6 +135,7 @@ public class AddContactFragment extends Fragment {
         presenter.onRequestWriteSdPermissionResult(granded);
     }
 
+    @Override
     public void requestWriteSdPermission() {
         if (getActivity() != null)
             ActivityCompat.requestPermissions(getActivity(),
