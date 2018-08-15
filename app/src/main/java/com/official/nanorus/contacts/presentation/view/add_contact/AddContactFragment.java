@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -31,7 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddContactFragment extends Fragment implements IAddContactView{
+public class AddContactFragment extends Fragment implements IAddContactView {
 
     public static final String SAVE_INSTANCE_CONTACT = "contact";
     private static final int REQUEST_CODE_IMAGE = 100;
@@ -50,6 +51,8 @@ public class AddContactFragment extends Fragment implements IAddContactView{
     EditText emailEditText;
     @BindView(R.id.iv_photo)
     ImageView photoImageView;
+    @BindView(R.id.btn_delete)
+    Button deleteImageButton;
 
     AddContactPresenter presenter;
 
@@ -99,6 +102,30 @@ public class AddContactFragment extends Fragment implements IAddContactView{
     }
 
     @Override
+    public void showDeleteImageButton(boolean show) {
+        if (show)
+            deleteImageButton.setVisibility(View.VISIBLE);
+        else
+            deleteImageButton.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showImage(boolean show) {
+        if (show) {
+            photoImageView.setVisibility(View.VISIBLE);
+        } else {
+            photoImageView.setVisibility(View.GONE);
+            showDeleteImageButton(false);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.onResumeView();
+    }
+
+    @Override
     public void clearFields() {
         nameEditText.setText("");
         surnameEditText.setText("");
@@ -115,6 +142,7 @@ public class AddContactFragment extends Fragment implements IAddContactView{
 
     @Override
     public void setImage(String image) {
+        showDeleteImageButton(true);
         Glide.with(this).load(image)
                 .apply(RequestOptions.bitmapTransform(new CircleCrop())
                         .placeholder(R.drawable.ic_no_photo)
@@ -129,6 +157,7 @@ public class AddContactFragment extends Fragment implements IAddContactView{
         Glide.with(this).load(R.drawable.ic_no_photo)
                 .apply(RequestOptions.bitmapTransform(new CircleCrop()))
                 .into(photoImageView);
+        showDeleteImageButton(false);
     }
 
     public void onWriteDbPermissionResult(boolean granded) {
@@ -139,7 +168,7 @@ public class AddContactFragment extends Fragment implements IAddContactView{
     public void requestWriteSdPermission() {
         if (getActivity() != null)
             ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
                     MainActivity.MY_PERMISSIONS_REQUEST_WRITE_SD);
     }
 
@@ -178,5 +207,8 @@ public class AddContactFragment extends Fragment implements IAddContactView{
         presenter.saveImage();
     }
 
-
+    @OnClick(R.id.btn_delete)
+    public void onDeleteImageClicked() {
+        presenter.onDeleteImageClicked();
+    }
 }

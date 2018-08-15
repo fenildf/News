@@ -35,11 +35,8 @@ public class AddContactPresenter {
                 @Override
                 public void onSuccess() {
                     if (AddContactPresenter.this.image != null) {
-                        if (resourceManager.checkWriteSdPermission()) {
-                            interactor.saveContactPhoto(AddContactPresenter.this.image, AddContactPresenter.this.photoFileName);
-                            resetImage();
-                        } else
-                            view.requestWriteSdPermission();
+                        interactor.saveContactPhoto(AddContactPresenter.this.image, AddContactPresenter.this.photoFileName);
+                        resetImage();
                     }
                     view.clearFields();
                     Toaster.shortToast(resourceManager.getStringAddContactSuccess());
@@ -57,16 +54,26 @@ public class AddContactPresenter {
     private void resetImage() {
         view.resetImage();
         this.image = null;
+        view.showDeleteImageButton(false);
+    }
+
+    public void onResumeView() {
+        if (resourceManager.checkWriteSdPermission()) {
+            view.showImage(true);
+        } else {
+            view.showImage(false);
+            view.requestWriteSdPermission();
+        }
     }
 
     public void onRequestWriteSdPermissionResult(boolean granded) {
-        if (this.image != null) {
-            if (granded) {
-                interactor.saveContactPhoto(this.image, this.photoFileName);
-                resetImage();
-            } else
-                view.requestWriteSdPermission();
+        if (granded) {
+            view.showImage(true);
+        } else {
+            view.showImage(false);
+            view.requestWriteSdPermission();
         }
+
     }
 
     public void onImageChosen(String imageUri) {
@@ -90,6 +97,12 @@ public class AddContactPresenter {
         if (this.image != null) {
             resourceManager.saveImageToCache(this.image);
         }
+    }
+
+    public void onDeleteImageClicked() {
+        resetImage();
+        resourceManager.clearImageCache();
+        view.showDeleteImageButton(false);
     }
 
     private void restoreState(Contact contact) {

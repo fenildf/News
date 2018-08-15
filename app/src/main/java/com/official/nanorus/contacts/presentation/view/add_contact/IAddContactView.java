@@ -14,4 +14,8 @@ public interface IAddContactView {
     void chooseImage();
 
     void setFields(Contact contact);
+
+    void showDeleteImageButton(boolean show);
+
+    void showImage(boolean b);
 }

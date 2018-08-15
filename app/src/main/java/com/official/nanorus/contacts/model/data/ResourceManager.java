@@ -100,7 +100,10 @@ public class ResourceManager {
         File cacheDir = new File(getCacheDir(), "pic");
         cacheDir.mkdirs();
         File f = new File(cacheDir, "addContact.png");
-        return f.getAbsolutePath();
+        if (f.exists())
+            return f.getAbsolutePath();
+        else
+            return null;
     }
 
     public File getCacheDir() {
@@ -129,11 +132,11 @@ public class ResourceManager {
         return context.getString(R.string.contacts_not_cleared);
     }
 
-    public String getStringNews(){
+    public String getStringNews() {
         return context.getString(R.string.news);
     }
 
-    public String getStringNoInternet(){
+    public String getStringNoInternet() {
         return context.getString(R.string.no_internet);
     }
 }

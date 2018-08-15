@@ -29,6 +29,7 @@
     <string name="news">News</string>
     <string name="enter_news_query">Enter news query</string>
     <string name="search">Search</string>
+    <string name="delete_image">Delete image</string>
     <string name="no_internet">Check your internet connection :)</string>
     <string name="more">More..</string>
     <string name="news_no_found">Oops. No news was found for this query.</string>
