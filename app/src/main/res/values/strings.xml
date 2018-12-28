@@ -1,30 +1,10 @@
 <resources>
-    <string name="app_name">Contacts</string>
-    <string name="contacts">Contacts</string>
-    <string name="add_contact">Add contact</string>
+    <string name="app_name">News</string>
     <string name="drawer_open">open</string>
     <string name="drawer_close">close</string>
     <string name="menu">Menu</string>
-    <string name="stephan">Stephan</string>
-    <string name="name_">Name*</string>
-    <string name="mc_col">Mc`col</string>
-    <string name="surname">Surname</string>
-    <string name="patronymic">Patronymic</string>
-    <string name="electro">Electro</string>
-    <string name="phone_">Phone*</string>
-    <string name="test_number">380931234567</string>
-    <string name="email">Email</string>
-    <string name="test_email">stephan_mccol@gmail.com</string>
-    <string name="contact_added">Contact added</string>
-    <string name="contact_did_not_add">The contact was not added</string>
-    <string name="dialog_clear_contacts">Are you sure to clear contact list?</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
-    <string name="contact_deleted">Contact deleted</string>
-    <string name="contact_not_deleted">Contact not deleted</string>
-    <string name="contacts_cleared">Contacts cleared</string>
-    <string name="contacts_not_cleared">Contacts not cleared</string>
-    <string name="dialog_delete_contact">Are you sure to delete contact</string>
     <string name="additional">Additional</string>
     <string name="news">News</string>
     <string name="enter_news_query">Enter news query</string>
@@ -33,4 +13,16 @@
     <string name="no_internet">Check your internet connection :)</string>
     <string name="more">More..</string>
     <string name="news_no_found">Oops. No news was found for this query.</string>
+    <string name="categories">Categories</string>
+    <string name="business">Business</string>
+    <string name="entertainment">Entertainment</string>
+    <string name="health">Health</string>
+    <string name="science">Science</string>
+    <string name="sports">Sports</string>
+    <string name="technology">Technology</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="news_categories">News categories</string>
+    <string name="anime">Anime</string>
 </resources>

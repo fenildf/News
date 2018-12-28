@@ -1,22 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:id="@+id/group_one">
-        <item android:title="@string/contacts">
-            <menu>
-                <item
-                    android:id="@+id/menu_item_contacts"
-                    android:title="@string/contacts" />
-                <item
-                    android:id="@+id/menu_item_add_contact"
-                    android:title="@string/add_contact" />
-            </menu>
-        </item>
-        <item android:title="@string/additional">
-            <menu>
-                <item
-                    android:id="@+id/menu_item_news"
-                    android:title="@string/news" />
-            </menu>
-        </item>
-    </group>
+
 </menu>
