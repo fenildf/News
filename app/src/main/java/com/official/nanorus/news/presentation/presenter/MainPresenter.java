@@ -62,6 +62,7 @@ public class MainPresenter {
     public void onNewsCategoryMenuItemClicked(int category) {
         newsInteractor.setQuery("");
         newsInteractor.setCategory(category);
+        onNewsMenuItemClicked();
 
         newsCategoryDisposable = newsInteractor.getCategory().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -94,7 +95,7 @@ public class MainPresenter {
     public void releasePresenter() {
         if (menuCategoriesDisposable != null && !menuCategoriesDisposable.isDisposed())
             menuCategoriesDisposable.dispose();
-        if (menuCategoriesDisposable != null && !newsCategoryDisposable.isDisposed())
+        if (newsCategoryDisposable != null && !newsCategoryDisposable.isDisposed())
             newsCategoryDisposable.dispose();
         view = null;
     }

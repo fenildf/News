@@ -19,7 +19,8 @@ public class NewsDatabaseContract {
             COLUMN_NAME_NEWS_DESCRIPTION + " TEXT" + COMMA +
             COLUMN_NAME_NEWS_PUBLISHED_AT + " TEXT" + COMMA +
             COLUMN_NAME_NEWS_URL + " TEXT" + COMMA +
-            COLUMN_NAME_NEWS_IMAGE_URL + " TEXT" +
+            COLUMN_NAME_NEWS_IMAGE_URL + " TEXT" + COMMA +
+            COLUMN_NAME_NEWS_CATEGORY + " INTEGER" +
             ")";
 
     public final String SQL_DELETE_TABLE_NEWS = "DROP TABLE IF EXISTS " + TABLE_NAME_NEWS;

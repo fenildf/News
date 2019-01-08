@@ -80,6 +80,7 @@ public class CategoriesDatabaseManager {
     public int clearCategories() {
         SQLiteDatabase db = databaseHelper.getWritableDB();
         db.delete(databaseContract.TABLE_NAME_CATEGORIES, null, null);
+        databaseHelper.closeDB();
         return 0;
     }
 

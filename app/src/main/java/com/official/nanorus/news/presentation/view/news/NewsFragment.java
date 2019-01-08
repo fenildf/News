@@ -46,7 +46,6 @@ public class NewsFragment extends Fragment implements INewsView {
         void setTitle(String title);
     }
 
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news, null);
@@ -108,7 +107,8 @@ public class NewsFragment extends Fragment implements INewsView {
     }
 
     public void getNews() {
-        presenter.getRefreshedNews("");
+        if (presenter != null)
+            presenter.getRefreshedNews("");
     }
 
     @Override

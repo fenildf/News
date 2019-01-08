@@ -14,7 +14,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private NewsDatabaseContract newsDatabaseContract;
     private CategoriesDatabaseContract categoriesDatabaseContract;
     private static final String DB_NAME = "Database.db";
-    private static final int DB_VERSION = 5;
+    private static final int DB_VERSION = 6;
     public static int DBConnectionsCount = 0;
 
 
@@ -34,6 +34,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(newsDatabaseContract.SQL_CREATE_TABLE_NEWS);
+        sqLiteDatabase.execSQL(categoriesDatabaseContract.SQL_CREATE_TABLE_CATEGORIES);
     }
 
     @Override
@@ -42,7 +43,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL(newsDatabaseContract.SQL_CREATE_TABLE_NEWS);
         if (oldVersion < 4)
             sqLiteDatabase.execSQL(categoriesDatabaseContract.SQL_CREATE_TABLE_CATEGORIES);
-        if (newVersion == 5)
+        if (oldVersion < 5)
             sqLiteDatabase.execSQL("ALTER TABLE " + newsDatabaseContract.TABLE_NAME_NEWS + " ADD " + newsDatabaseContract.COLUMN_NAME_NEWS_CATEGORY);
     }
 

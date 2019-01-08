@@ -4,6 +4,6 @@ This makes it easy to work with the desired layers, without affecting others, an
 
 ### Description:
 Soon
-### Используемые навыки и инструменты:
+### Used skills and tools:
 Reactive programming, multithreading, REST API in conjunction with Rx, with caching. Work with SQLite and Shared Preferences.
 Work with DB and REST is carried in the background thread.
