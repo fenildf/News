@@ -53,15 +53,15 @@ public class Utils {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
     }
 
-    public static boolean checkNetWorkError(Throwable throwable) {
+    public static boolean checkNetworkError(Throwable throwable) {
         return throwable.toString().contains("Unable to resolve host");
     }
 
-    public static String mapDate(String apiDate) {
+    public static String mapDateFromApi(String apiDate) {
         String clearApiDate = apiDate.replace("T", ",")
                 .replace("Z", ";");
         SimpleDateFormat fromUser = new SimpleDateFormat("yyyy-MM-dd,HH:mm:ss;", Locale.ENGLISH);
-        SimpleDateFormat myFormat = new SimpleDateFormat("EEEE, MMM dd, yyyy   HH:mm", Locale.ENGLISH);
+        SimpleDateFormat myFormat = new SimpleDateFormat("EEEE, MMM dd, yyyy HH:mm", Locale.ENGLISH);
         String uiDate = "";
         try {
             uiDate = myFormat.format(fromUser.parse(clearApiDate));
@@ -70,5 +70,4 @@ public class Utils {
         }
         return uiDate;
     }
-
 }

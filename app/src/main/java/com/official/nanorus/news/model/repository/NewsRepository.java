@@ -32,8 +32,11 @@ public class NewsRepository {
         categoriesDatabaseManager = CategoriesDatabaseManager.getInstance();
     }
 
-    public Observable<News> getCachedNews(int category) {
-        return newsDatabaseManager.getNews(category).concatMapIterable(newsList -> newsList);
+    public Observable<News> getCachedNews(Category category) {
+        int categoryId = 0;
+        if (category != null)
+            categoryId = category.getId();
+        return newsDatabaseManager.getNews(categoryId).concatMapIterable(newsList -> newsList);
     }
 
     public void saveNewsToCache(List<News> newsList) {
@@ -45,7 +48,11 @@ public class NewsRepository {
     }
 
     public Observable<News> getRefreshedNews(String country, Category category, String query) {
-        return getApiNews(country, category, query);
+        return getApiNews("ua", category, query);
+    }
+
+    public Observable<News> getRefreshedNews(String country, String query) {
+        return getApiNews("ua", query);
     }
 
     private Observable<News> getApiNews(String country, Category category, String query) {
@@ -56,10 +63,24 @@ public class NewsRepository {
                 .map(newsArticle ->
                         new News(newsArticle.getTitle(), newsArticle.getDescription(),
                                 newsArticle.getUrl(), newsArticle.getUrlToImage(),
-                                Utils.mapDate(newsArticle.getPublishedAt()), category.getId()
+                                Utils.mapDateFromApi(newsArticle.getPublishedAt()), category.getId()
                         ))
                 .subscribeOn(Schedulers.io());
     }
+
+    private Observable<News> getApiNews(String country, String query) {
+        return retroClient.getNewsService().getNewsFeed(country, query)
+                .toObservable()
+                .map(NewsRequest::getNewsArticles)
+                .flatMap((Function<List<NewsArticle>, Observable<NewsArticle>>) Observable::fromIterable)
+                .map(newsArticle ->
+                        new News(newsArticle.getTitle(), newsArticle.getDescription(),
+                                newsArticle.getUrl(), newsArticle.getUrlToImage(),
+                                Utils.mapDateFromApi(newsArticle.getPublishedAt()), 0
+                        ))
+                .subscribeOn(Schedulers.io());
+    }
+
 
     public String getQuery() {
         return preferencesManager.getNewsQuery();

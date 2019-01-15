@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -50,18 +49,17 @@ public class NewsPresenter {
     public void getRefreshedNews(String query) {
         Log.d(TAG, "getRefreshedNews()");
         view.showLoading(true);
-        newsObservable = interactor.getRefreshedNews(query);
+        newsObservable = interactor.getRefreshedNews(query, true);
         List<News> newsList = new ArrayList<>();
         newsDisponsable = newsObservable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(news -> {
-                            view.scrollToTop();
                             Log.d(TAG, news.getTitle());
                             newsList.add(news);
                         },
                         throwable -> {
                             Log.d(TAG, throwable.getMessage());
                             view.showLoading(false);
-                            if (Utils.checkNetWorkError(throwable)) {
+                            if (Utils.checkNetworkError(throwable)) {
                                 Toaster.shortToast(resourceManager.getStringNoInternet());
                                 getNews();
                             } else {
@@ -69,6 +67,7 @@ public class NewsPresenter {
                             }
                         },
                         () -> {
+                            view.scrollToTop();
                             view.clearNewsList();
                             view.updateNewsList(newsList);
                             view.showNoNews(newsList.isEmpty());
@@ -83,7 +82,7 @@ public class NewsPresenter {
         Log.d(TAG, "getNews()");
         view.showLoading(true);
 
-        newsObservable = interactor.getCategory().flatMapObservable(category -> interactor.getNews(category.getId()));
+        newsObservable = interactor.getCategory().flatMapObservable(category -> interactor.getNews(category));
         if (newsDisponsable != null && !newsDisponsable.isDisposed()) {
             newsDisponsable.dispose();
         }
@@ -111,7 +110,6 @@ public class NewsPresenter {
 
     public void onQueryEntered(String query) {
         interactor.setCountry("ru");
-        //interactor.setCategory("sport");
         getRefreshedNews(query);
     }
 

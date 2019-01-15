@@ -19,13 +19,19 @@ public class NewsInteractor {
         repository = new NewsRepository();
     }
 
-    public Observable<News> getRefreshedNews(String query) {
-        Single<Category> categorySingle = repository.getCategory();
-        return categorySingle.subscribeOn(Schedulers.io())
-                .flatMapObservable(category -> repository.getRefreshedNews(repository.getCountry(), category, query));
+    public Observable<News> getRefreshedNews(String query, boolean withCategory) {
+        Observable<News> refreshedNews;
+        if (withCategory) {
+            Single<Category> categorySingle = repository.getCategory();
+            refreshedNews = categorySingle.subscribeOn(Schedulers.io())
+                    .flatMapObservable(category -> repository.getRefreshedNews(repository.getCountry(), category, query));
+        } else {
+            refreshedNews = repository.getRefreshedNews(repository.getCountry(), query);
+        }
+        return refreshedNews;
     }
 
-    public Observable<News> getNews(int category) {
+    public Observable<News> getNews(Category category) {
         return repository.getCachedNews(category);
     }
 

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.official.nanorus.news.entity.data.categories.Category;
 import com.official.nanorus.news.model.data.ResourceManager;
+import com.official.nanorus.news.model.data.TextUtils;
 import com.official.nanorus.news.model.domain.CategoriesInteractor;
 import com.official.nanorus.news.model.domain.MainInteractor;
 import com.official.nanorus.news.model.domain.NewsInteractor;
@@ -39,20 +40,17 @@ public class MainPresenter {
 
     public void bindView(IMainView view) {
         this.view = view;
-        view.setSelectedMenuItem(mainInteractor.getSelectedMenuItem());
-        if (mainInteractor.getSelectedMenuItem() == MainActivity.FRAGMENT_CATEGORIES) {
-
-        } else if (mainInteractor.getSelectedMenuItem() == MainActivity.FRAGMENT_NEWS)
-            onNewsMenuItemClicked();
-        else {
-            onNewsMenuItemClicked();
-        }
+        onCategoriesMenuItemClicked();
     }
 
     public void onNewsMenuItemClicked() {
         view.showNews();
     }
 
+    public void onCategoriesMenuItemClicked() {
+        view.setTitle("News");
+        view.showCategories();
+    }
 
     public void saveMenuState(int item) {
         //   contactsInteractor.setLastMenuItem(item);
@@ -68,22 +66,15 @@ public class MainPresenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(category1 ->
                         {
-                            view.setTitle(category1.getName());
+                            view.setTitle(TextUtils.uppercaseFirstCharacter(category1.getName()));
                             view.getNews();
                         }, throwable -> Log.d(TAG, throwable.getMessage())
 
                 );
     }
 
-    public void onCategoryClicked(Category category) {
-
-    }
-
     public void onNewsCategoriesMenuCreate() {
-        Single<List<Category>> refreshCategoriesSingle = categoriesInteractor.refreshCategories().subscribeOn(Schedulers.io());
-        Single<List<Category>> getCategoriesSingle = categoriesInteractor.getCategories();
-        Single<List<Category>> categoriesSingle = refreshCategoriesSingle.flatMap(categories1 -> getCategoriesSingle);
-
+        Single<List<Category>> categoriesSingle = categoriesInteractor.getCategories();
         menuCategoriesDisposable = categoriesSingle.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -100,4 +91,7 @@ public class MainPresenter {
         view = null;
     }
 
+    public void onMainMenuItemClicked() {
+        onCategoriesMenuItemClicked();
+    }
 }

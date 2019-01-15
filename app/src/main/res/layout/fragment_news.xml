@@ -9,11 +9,11 @@
         android:id="@+id/tv_no_news"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:text="@string/news_no_found"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
@@ -28,6 +28,7 @@
         app:layout_constraintTop_toTopOf="@+id/tv_no_news">
 
         <android.support.v4.widget.NestedScrollView
+            android:id="@+id/nested"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -40,11 +41,11 @@
                     android:id="@+id/cv_search"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -72,4 +73,16 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <TextView
+        android:id="@+id/tv_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="116dp"
+        android:layout_marginLeft="116dp"
+        android:layout_marginTop="36dp"
+        android:text="@string/loading"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/swipe_refresh" />
 </android.support.constraint.ConstraintLayout>

@@ -16,4 +16,8 @@ public interface IMainView {
     void setTitle(String category);
 
     void setMenuNewsCategories(List<Category> categories);
+
+    void setToolbarButtonHamburger();
+
+    void setToolbarButtonArray();
 }

@@ -20,7 +20,8 @@ public class CategoriesRepository {
     }
 
     public Single<List<Category>> getCategories() {
-        return databaseManager.getCategoriesList();
+        //return databaseManager.getCategoriesList();
+        return refreshCategories();
     }
 
     private void putCategories(List<Category> categories) {
@@ -32,12 +33,12 @@ public class CategoriesRepository {
 
         Single<List<Category>> sourceListSingle = Single.create(emitter -> {
             List<Category> categories = new ArrayList<>();
-            categories.add(new Category(1, "business", resourceManager.getNewsCategoryImage("business")));
-            categories.add(new Category(2, "entertainment", resourceManager.getNewsCategoryImage("entertainment")));
-            categories.add(new Category(3, "health", resourceManager.getNewsCategoryImage("health")));
-            categories.add(new Category(4, "science", resourceManager.getNewsCategoryImage("science")));
-            categories.add(new Category(5, "sports", resourceManager.getNewsCategoryImage("sports")));
-            categories.add(new Category(6, "technology", resourceManager.getNewsCategoryImage("technology")));
+            categories.add(new Category(1, "business", "business"));
+            categories.add(new Category(2, "entertainment","entertainment"));
+            categories.add(new Category(3, "health", "health"));
+            categories.add(new Category(4, "science", "science"));
+            categories.add(new Category(5, "sports", "sports"));
+            categories.add(new Category(6, "technology", "technology"));
             emitter.onSuccess(categories);
         });
 

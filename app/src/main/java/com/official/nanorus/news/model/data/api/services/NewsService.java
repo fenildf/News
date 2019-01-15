@@ -10,5 +10,7 @@ public interface NewsService {
 
     @GET("top-headlines?apiKey=90b7ce1f745a43dbb8bfa2a1fe130e72")
     Single<NewsRequest> getNewsFeed(@Query("country") String country, @Query("category") String category, @Query("q") String query);
+    @GET("top-headlines?apiKey=90b7ce1f745a43dbb8bfa2a1fe130e72")
+    Single<NewsRequest> getNewsFeed(@Query("country") String country, @Query("q") String query);
 
 }

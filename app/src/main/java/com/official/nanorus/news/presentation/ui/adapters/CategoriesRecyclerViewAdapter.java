@@ -8,9 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.official.nanorus.news.R;
 import com.official.nanorus.news.entity.data.categories.Category;
+import com.official.nanorus.news.model.data.ResourceManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +25,14 @@ public class CategoriesRecyclerViewAdapter extends RecyclerView.Adapter<Categori
 
     private List<Category> dataList;
     private Context context;
+    ResourceManager resourceManager;
+    CategoryListListener categoryListListener;
 
-    public CategoriesRecyclerViewAdapter(Context context) {
+    public CategoriesRecyclerViewAdapter(Context context, CategoryListListener categoryListListener) {
         this.context = context;
         dataList = new ArrayList<>();
+        resourceManager = new ResourceManager();
+        this.categoryListListener = categoryListListener;
     }
 
     public interface CategoryListListener {
@@ -41,13 +49,14 @@ public class CategoriesRecyclerViewAdapter extends RecyclerView.Adapter<Categori
     @Override
     public void onBindViewHolder(@NonNull CategoriesRecyclerViewHolder holder, int position) {
         Category data = dataList.get(position);
+        holder.categoryTextView.setText(data.getName());
+        ImageButton categoryButton = holder.categoryButton;
+        Glide.with(context).load(resourceManager.getNewsCategoryImage(data.getImage()))
+                .into(categoryButton);
 
-        Button categoryButton = holder.categoryButton;
-        categoryButton.setText(data.getName());
-        categoryButton.setBackground(holder.itemView.getContext().getResources().getDrawable(data.getImage()));
         categoryButton.setOnClickListener(view -> {
             try {
-                ((CategoryListListener) context).onCategoryClicked(data);
+                categoryListListener.onCategoryClicked(data);
             } catch (ClassCastException cce) {
                 Log.d(TAG, cce.getMessage());
             }
@@ -73,11 +82,13 @@ public class CategoriesRecyclerViewAdapter extends RecyclerView.Adapter<Categori
 
     public class CategoriesRecyclerViewHolder extends RecyclerView.ViewHolder {
 
-        Button categoryButton;
+        ImageButton categoryButton;
+        TextView categoryTextView;
 
         public CategoriesRecyclerViewHolder(View itemView) {
             super(itemView);
             categoryButton = itemView.findViewById(R.id.btn_category);
+            categoryTextView = itemView.findViewById(R.id.tv_category);
         }
     }
 }

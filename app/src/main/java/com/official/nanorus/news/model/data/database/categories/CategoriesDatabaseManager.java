@@ -39,10 +39,7 @@ public class CategoriesDatabaseManager {
             List<Category> categoriesList = new ArrayList<>();
             if (cursor.moveToFirst()) {
                 do {
-                    String imageSrc = cursor.getString(cursor.getColumnIndex(databaseContract.COLUMN_NAME_CATEGORY_IMAGE));
-                    int image = 0;
-                    if (imageSrc != null && !imageSrc.equals(""))
-                        image = Integer.valueOf(imageSrc);
+                    String image = cursor.getString(cursor.getColumnIndex(databaseContract.COLUMN_NAME_CATEGORY_IMAGE));
                     categoriesList.add(new Category(
                                     cursor.getInt(cursor.getColumnIndex(databaseContract.COLUMN_NAME_ID)),
                                     cursor.getString(cursor.getColumnIndex(databaseContract.COLUMN_NAME_CATEGORY_NAME)),
@@ -90,10 +87,7 @@ public class CategoriesDatabaseManager {
             Cursor cursor = db.rawQuery("SELECT * FROM " + databaseContract.TABLE_NAME_CATEGORIES + " WHERE "
                     + databaseContract.COLUMN_NAME_ID + " = " + categoryId, null);
             if (cursor.moveToFirst()) {
-                String imageSrc = cursor.getString(cursor.getColumnIndex(databaseContract.COLUMN_NAME_CATEGORY_IMAGE));
-                int image = 0;
-                if (imageSrc != null && !imageSrc.equals(""))
-                    image = Integer.valueOf(imageSrc);
+                String image = cursor.getString(cursor.getColumnIndex(databaseContract.COLUMN_NAME_CATEGORY_IMAGE));
                 Category category = new Category(
                         cursor.getInt(cursor.getColumnIndex(databaseContract.COLUMN_NAME_ID)),
                         cursor.getString(cursor.getColumnIndex(databaseContract.COLUMN_NAME_CATEGORY_NAME)),

@@ -30,6 +30,8 @@ public class NewsFragment extends Fragment implements INewsView {
 
     @BindView(R.id.rv_news)
     RecyclerView newsRecyclerView;
+    @BindView(R.id.tv_refresh)
+    TextView swipeRefreshTextView;
     private RecyclerView.LayoutManager layoutManager;
     private NewsRecyclerViewAdapter adapter;
     @BindView(R.id.swipe_refresh)
@@ -137,6 +139,10 @@ public class NewsFragment extends Fragment implements INewsView {
     @Override
     public void showLoading(boolean show) {
         swipeRefreshLayout.setRefreshing(show);
+        if (show)
+            swipeRefreshTextView.setVisibility(View.VISIBLE);
+        else
+            swipeRefreshTextView.setVisibility(View.INVISIBLE);
     }
 
     @Override

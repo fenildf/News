@@ -51,7 +51,11 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         holder.descriptionTextView.setText(data.getDescription());
         holder.dateTextView.setText(data.getPublishedAt());
         holder.photoImageView.setVisibility(View.GONE);
-        holder.moreButton.setOnClickListener(view -> router.openUrlIntBrowser(data.getUrl(), holder.itemView.getContext()));
+
+        View.OnClickListener openNewsBrowser = view -> router.openUrlIntBrowser(data.getUrl(), holder.itemView.getContext());
+        holder.moreButton.setOnClickListener(openNewsBrowser);
+        holder.titleTextView.setOnClickListener(openNewsBrowser);
+
         if (data.getUrlToImage() != null) {
             holder.photoImageView.setVisibility(View.VISIBLE);
             Glide.with(holder.itemView.getContext())

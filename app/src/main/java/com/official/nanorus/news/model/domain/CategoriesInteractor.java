@@ -19,7 +19,7 @@ public class CategoriesInteractor {
         return repository.getCategories();
     }
 
-    public Single<List<Category>> refreshCategories() {
+    private Single<List<Category>> refreshCategories() {
        return repository.refreshCategories();
     }
 }

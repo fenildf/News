@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 
 import com.official.nanorus.news.R;
 import com.official.nanorus.news.entity.data.categories.Category;
+import com.official.nanorus.news.model.data.TextUtils;
 import com.official.nanorus.news.model.repository.CategoriesRepository;
 import com.official.nanorus.news.presentation.presenter.MainPresenter;
 import com.official.nanorus.news.presentation.ui.adapters.CategoriesRecyclerViewAdapter;
@@ -28,7 +29,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements IMainView, NewsFragment.NewsListener, CategoriesRecyclerViewAdapter.CategoryListListener {
+public class MainActivity extends AppCompatActivity implements IMainView, NewsFragment.NewsListener {
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
     public static final String FRAGMENT_CATEGORIES_TAG = "categories";
     public static final int FRAGMENT_NEWS = 1;
     public static final String FRAGMENT_NEWS_TAG = "news";
+    public static final int MENU_ITEM_MAIN = 0;
 
     public static String ATTACHED_FRAGMENT_KEY = "fragment";
 
@@ -135,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
         navigationHeader = (ConstraintLayout) navigationView.getHeaderView(0);
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
                 R.string.drawer_open, R.string.drawer_close) {
-
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 supportInvalidateOptionsMenu();
@@ -153,9 +154,14 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
         presenter.onNewsCategoriesMenuCreate();
 
         navigationView.setNavigationItemSelectedListener(item -> {
-            selectedMenuItem = FRAGMENT_NEWS;
             presenter.saveMenuState(selectedMenuItem);
-            presenter.onNewsCategoryMenuItemClicked(item.getItemId());
+            if (item.getItemId() == MENU_ITEM_MAIN) {
+                selectedMenuItem = FRAGMENT_CATEGORIES;
+                presenter.onMainMenuItemClicked();
+            } else {
+                selectedMenuItem = FRAGMENT_NEWS;
+                presenter.onNewsCategoryMenuItemClicked(item.getItemId());
+            }
 
             drawerLayout.closeDrawers();
             return false;
@@ -165,13 +171,24 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
     @Override
     public void setMenuNewsCategories(List<Category> categories) {
         final Menu menu = navigationView.getMenu();
+        menu.add(0, 0, 0, R.string.main_page);
         final SubMenu subMenu = menu.addSubMenu(R.string.news_categories);
-        for (int i = 0; i < categories.size(); i++) {
+        for (int i = 1; i < categories.size(); i++) {
             Category category = categories.get(i);
             String categoryName = category.getName();
-            categoryName = categoryName.substring(0, 1).toUpperCase() + categoryName.substring(1);
+            categoryName = TextUtils.uppercaseFirstCharacter(categoryName);
             subMenu.add(0, category.getId(), i, categoryName);
         }
+    }
+
+    @Override
+    public void setToolbarButtonHamburger() {
+
+    }
+
+    @Override
+    public void setToolbarButtonArray() {
+
     }
 
     @Override
@@ -203,8 +220,4 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
         getSupportActionBar().setTitle(title);
     }
 
-    @Override
-    public void onCategoryClicked(Category category) {
-        presenter.onCategoryClicked(category);
-    }
 }
