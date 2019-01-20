@@ -6,6 +6,7 @@ import java.util.List;
 public class Category {
     private int id;
     private String name;
+    private String defaultName;
     private String image;
 
     private static List<Category> categories = new ArrayList<>();
@@ -14,10 +15,19 @@ public class Category {
         return categories;
     }
 
-    public Category(int id, String name, String image) {
+    public Category(int id, String name, String defaultName, String image) {
         this.id = id;
         this.name = name;
+        this.defaultName = defaultName;
         this.image = image;
+    }
+
+    public String getDefaultName() {
+        return defaultName;
+    }
+
+    public void setDefaultName(String defaultName) {
+        this.defaultName = defaultName;
     }
 
     public int getId() {

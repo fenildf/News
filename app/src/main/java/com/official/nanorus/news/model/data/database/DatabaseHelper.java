@@ -14,8 +14,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private NewsDatabaseContract newsDatabaseContract;
     private CategoriesDatabaseContract categoriesDatabaseContract;
     private static final String DB_NAME = "Database.db";
-    private static final int DB_VERSION = 6;
-    public static int DBConnectionsCount = 0;
+    private static final int DB_VERSION = 8;
+    private static int DBConnectionsCount = 0;
 
 
     public static DatabaseHelper getInstance() {
@@ -35,6 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(newsDatabaseContract.SQL_CREATE_TABLE_NEWS);
         sqLiteDatabase.execSQL(categoriesDatabaseContract.SQL_CREATE_TABLE_CATEGORIES);
+        sqLiteDatabase.execSQL(newsDatabaseContract.SQL_CREATE_TABLE_COUNTRIES);
     }
 
     @Override
@@ -45,6 +46,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL(categoriesDatabaseContract.SQL_CREATE_TABLE_CATEGORIES);
         if (oldVersion < 5)
             sqLiteDatabase.execSQL("ALTER TABLE " + newsDatabaseContract.TABLE_NAME_NEWS + " ADD " + newsDatabaseContract.COLUMN_NAME_NEWS_CATEGORY);
+        if (oldVersion < 7)
+            sqLiteDatabase.execSQL(newsDatabaseContract.SQL_CREATE_TABLE_COUNTRIES);
+        if (oldVersion < 8) {
+            sqLiteDatabase.execSQL("ALTER TABLE " + newsDatabaseContract.TABLE_NAME_COUNTRIES + " ADD " + newsDatabaseContract.COLUMN_NAME_COUNTRIES_LANG);
+            sqLiteDatabase.execSQL("ALTER TABLE " + categoriesDatabaseContract.TABLE_NAME_CATEGORIES + " ADD " + categoriesDatabaseContract.COLUMN_NAME_CATEGORY_DEFAULT_NAME);
+            sqLiteDatabase.execSQL("ALTER TABLE " + categoriesDatabaseContract.TABLE_NAME_CATEGORIES + " ADD " + categoriesDatabaseContract.COLUMN_NAME_CATEGORY_LANG);
+        }
     }
 
     public SQLiteDatabase getReadableDB() {

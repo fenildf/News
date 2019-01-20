@@ -7,6 +7,9 @@ import com.official.nanorus.news.model.data.database.categories.CategoriesDataba
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Completable;
+import io.reactivex.CompletableEmitter;
+import io.reactivex.CompletableOnSubscribe;
 import io.reactivex.Single;
 
 public class CategoriesRepository {
@@ -20,8 +23,7 @@ public class CategoriesRepository {
     }
 
     public Single<List<Category>> getCategories() {
-        //return databaseManager.getCategoriesList();
-        return refreshCategories();
+        return databaseManager.getCategoriesList();
     }
 
     private void putCategories(List<Category> categories) {
@@ -29,7 +31,7 @@ public class CategoriesRepository {
         databaseManager.putCategories(categories);
     }
 
-    public Single<List<Category>> refreshCategories() {
+/*    public Single<List<Category>> refreshCategories() {
 
         Single<List<Category>> sourceListSingle = Single.create(emitter -> {
             List<Category> categories = new ArrayList<>();
@@ -47,5 +49,16 @@ public class CategoriesRepository {
             return categories;
         });
         return refreshedListSingle;
+    }*/
+
+    public Completable insertDefaultCategories() {
+      return  Completable.create(emitter -> {
+          databaseManager.insertDefaultCategories();
+          emitter.onComplete();
+      });
+    }
+
+    public void clearCategories() {
+        databaseManager.clearCategories();
     }
 }

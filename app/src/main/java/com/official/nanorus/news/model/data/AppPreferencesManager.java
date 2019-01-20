@@ -34,6 +34,12 @@ public class AppPreferencesManager {
         editor.apply();
     }
 
+    private void putBoolean(String name, boolean value) {
+        SharedPreferences.Editor editor = getPreferences().edit();
+        editor.putBoolean(name, value);
+        editor.apply();
+    }
+
     public void setSelectedMenuItem(int item) {
         SharedPreferences.Editor editor = getPreferences().edit();
         editor.putInt("menu_item", item);
@@ -68,6 +74,14 @@ public class AppPreferencesManager {
 
     public void setNewsCategory(int category) {
         putInt("news_category", category);
+    }
+
+    public void setAppFirstStarted(boolean appFirstStarted) {
+        putBoolean("app_first_started", appFirstStarted);
+    }
+
+    public boolean getAppFirstStarted() {
+        return getPreferences().getBoolean("app_first_started", true);
     }
 
     public String getNewsCountry() {

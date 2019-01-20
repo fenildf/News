@@ -19,6 +19,10 @@ public class ResourceManager {
         return context.getString(R.string.news);
     }
 
+    public String getStringAppName() {
+        return context.getString(R.string.app_name);
+    }
+
     public String getStringNoInternet() {
         return context.getString(R.string.no_internet);
     }

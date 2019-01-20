@@ -34,7 +34,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
 
     public NewsRecyclerViewAdapter() {
         dataList = new ArrayList<>();
-        router = new Router();
+        router = Router.getInstance();
     }
 
     @NonNull
@@ -52,7 +52,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         holder.dateTextView.setText(data.getPublishedAt());
         holder.photoImageView.setVisibility(View.GONE);
 
-        View.OnClickListener openNewsBrowser = view -> router.openUrlIntBrowser(data.getUrl(), holder.itemView.getContext());
+        View.OnClickListener openNewsBrowser = view -> router.openUrlInBrowser(data.getUrl(), holder.itemView.getContext());
         holder.moreButton.setOnClickListener(openNewsBrowser);
         holder.titleTextView.setOnClickListener(openNewsBrowser);
 

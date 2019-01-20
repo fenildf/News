@@ -5,6 +5,7 @@ import com.official.nanorus.news.model.repository.CategoriesRepository;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
 
 public class CategoriesInteractor {
@@ -20,6 +21,14 @@ public class CategoriesInteractor {
     }
 
     private Single<List<Category>> refreshCategories() {
-       return repository.refreshCategories();
+       return repository.getCategories();
+    }
+
+    public Completable insertDefaultCategories() {
+        return repository.insertDefaultCategories();
+    }
+
+    public void clearCategories(){
+        repository.clearCategories();
     }
 }

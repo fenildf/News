@@ -17,4 +17,5 @@ public class MainRepository {
     public void setSelectedMenuItem(int item) {
         preferencesManager.setSelectedMenuItem(item);
     }
+
 }

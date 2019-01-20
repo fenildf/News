@@ -2,6 +2,7 @@ package com.official.nanorus.news.model.repository;
 
 
 import com.official.nanorus.news.entity.data.categories.Category;
+import com.official.nanorus.news.entity.data.news.Country;
 import com.official.nanorus.news.entity.data.news.News;
 import com.official.nanorus.news.entity.data.news.api.NewsArticle;
 import com.official.nanorus.news.entity.data.news.api.NewsRequest;
@@ -13,6 +14,9 @@ import com.official.nanorus.news.model.data.database.news.NewsDatabaseManager;
 
 import java.util.List;
 
+import io.reactivex.Completable;
+import io.reactivex.CompletableEmitter;
+import io.reactivex.CompletableOnSubscribe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.functions.Function;
@@ -48,15 +52,15 @@ public class NewsRepository {
     }
 
     public Observable<News> getRefreshedNews(String country, Category category, String query) {
-        return getApiNews("ua", category, query);
+        return getApiNews(country, category, query);
     }
 
     public Observable<News> getRefreshedNews(String country, String query) {
-        return getApiNews("ua", query);
+        return getApiNews(country, query);
     }
 
     private Observable<News> getApiNews(String country, Category category, String query) {
-        return retroClient.getNewsService().getNewsFeed(country, category.getName(), query)
+        return retroClient.getNewsService().getNewsFeed(country, category.getDefaultName(), query)
                 .toObservable()
                 .map(NewsRequest::getNewsArticles)
                 .flatMap((Function<List<NewsArticle>, Observable<NewsArticle>>) Observable::fromIterable)
@@ -99,12 +103,22 @@ public class NewsRepository {
         preferencesManager.setNewsCategory(category);
     }
 
-    public String getCountry() {
-        return preferencesManager.getNewsCountry();
+    public Single<Country> getCountry() {
+        return newsDatabaseManager.getCountry(preferencesManager.getNewsCountry());
     }
 
     public void setCountry(String country) {
         preferencesManager.setNewsCountry(country);
     }
 
+    public Completable insertDefaultCountries() {
+       return Completable.create(emitter -> {
+            newsDatabaseManager.insertDefaultCountries();
+            emitter.onComplete();
+        });
+    }
+
+    public void clearCountries(){
+        newsDatabaseManager.clearCountries();
+    }
 }

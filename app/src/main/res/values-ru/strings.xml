@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Новости в мире</string>
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
+    <string name="news">Новости</string>
+    <string name="search">Поиск</string>
+    <string name="no_internet">Проверьте подключение к интернету :)</string>
+    <string name="more">Подробнее..</string>
+    <string name="news_no_found">Уупс. Не найдено новостей по данному запросу</string>
+    <string name="categories">Категории</string>
+
+    <string name="news_categories">Категории новостей</string>
+    <string name="anime">Аниме</string>
+    <string name="loading">Загрузка..</string>
+    <string name="main_page">Главная страница</string>
+    <string name="settings">Настройки</string>
+    <string name="country">Страна</string>
+    <string name="russian_federation">Российская Федерация</string>
+    <string name="language">Язык</string>
+    <string name="russian">Русский</string>
+    <string name="select_country_of_news">Выберите страну</string>
+    <string name="close">Закрыть</string>
+</resources>

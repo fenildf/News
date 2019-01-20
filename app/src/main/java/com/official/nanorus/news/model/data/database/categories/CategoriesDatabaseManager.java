@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.official.nanorus.news.entity.data.categories.Category;
+import com.official.nanorus.news.model.data.Utils;
 import com.official.nanorus.news.model.data.database.DatabaseHelper;
 
 import java.util.ArrayList;
@@ -35,7 +36,9 @@ public class CategoriesDatabaseManager {
     public Single<List<Category>> getCategoriesList() {
         return Single.create(emitter -> {
             SQLiteDatabase db = databaseHelper.getReadableDB();
-            Cursor cursor = db.rawQuery("SELECT * FROM " + databaseContract.TABLE_NAME_CATEGORIES, null);
+            Cursor cursor = db.rawQuery("SELECT * FROM " + databaseContract.TABLE_NAME_CATEGORIES
+                    + " WHERE " + databaseContract.COLUMN_NAME_CATEGORY_LANG + " = '" + Utils.getAppLanguage() + "'"
+                    , null);
             List<Category> categoriesList = new ArrayList<>();
             if (cursor.moveToFirst()) {
                 do {
@@ -43,6 +46,7 @@ public class CategoriesDatabaseManager {
                     categoriesList.add(new Category(
                                     cursor.getInt(cursor.getColumnIndex(databaseContract.COLUMN_NAME_ID)),
                                     cursor.getString(cursor.getColumnIndex(databaseContract.COLUMN_NAME_CATEGORY_NAME)),
+                                    cursor.getString(cursor.getColumnIndex(databaseContract.COLUMN_NAME_CATEGORY_DEFAULT_NAME)),
                                     image
                             )
                     );
@@ -85,12 +89,15 @@ public class CategoriesDatabaseManager {
         return Single.create(emitter -> {
             SQLiteDatabase db = databaseHelper.getReadableDB();
             Cursor cursor = db.rawQuery("SELECT * FROM " + databaseContract.TABLE_NAME_CATEGORIES + " WHERE "
-                    + databaseContract.COLUMN_NAME_ID + " = " + categoryId, null);
+                    + databaseContract.COLUMN_NAME_ID + " = " + categoryId + " AND "
+                            + databaseContract.COLUMN_NAME_CATEGORY_LANG + " = '" + Utils.getAppLanguage() + "'"
+                    , null);
             if (cursor.moveToFirst()) {
                 String image = cursor.getString(cursor.getColumnIndex(databaseContract.COLUMN_NAME_CATEGORY_IMAGE));
                 Category category = new Category(
                         cursor.getInt(cursor.getColumnIndex(databaseContract.COLUMN_NAME_ID)),
                         cursor.getString(cursor.getColumnIndex(databaseContract.COLUMN_NAME_CATEGORY_NAME)),
+                        cursor.getString(cursor.getColumnIndex(databaseContract.COLUMN_NAME_CATEGORY_DEFAULT_NAME)),
                         image
                 );
                 emitter.onSuccess(category);
@@ -98,5 +105,10 @@ public class CategoriesDatabaseManager {
                 databaseHelper.closeDB();
             }
         });
+    }
+
+    public void insertDefaultCategories() {
+        SQLiteDatabase db = databaseHelper.getWritableDB();
+        db.execSQL(databaseContract.SQL_FIRST_INSERT_CATEGORIES);
     }
 }

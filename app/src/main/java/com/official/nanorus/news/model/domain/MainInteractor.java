@@ -17,4 +17,5 @@ public class MainInteractor {
     public void setSelectedMenuItem(int item) {
         repository.setSelectedMenuItem(item);
     }
+
 }

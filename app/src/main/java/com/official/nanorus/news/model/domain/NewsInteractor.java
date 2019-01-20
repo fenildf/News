@@ -1,14 +1,15 @@
 package com.official.nanorus.news.model.domain;
 
 import com.official.nanorus.news.entity.data.categories.Category;
+import com.official.nanorus.news.entity.data.news.Country;
 import com.official.nanorus.news.entity.data.news.News;
 import com.official.nanorus.news.model.repository.NewsRepository;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
-import io.reactivex.schedulers.Schedulers;
 
 
 public class NewsInteractor {
@@ -23,10 +24,15 @@ public class NewsInteractor {
         Observable<News> refreshedNews;
         if (withCategory) {
             Single<Category> categorySingle = repository.getCategory();
-            refreshedNews = categorySingle.subscribeOn(Schedulers.io())
-                    .flatMapObservable(category -> repository.getRefreshedNews(repository.getCountry(), category, query));
+            Single<Country> countrySingle = repository.getCountry();
+
+            refreshedNews = Single.zip(categorySingle, countrySingle, (category, country) ->
+                    repository.getRefreshedNews(country.getAbbreviation(), category, query))
+                    .flatMapObservable(newsObservable -> newsObservable);
+
         } else {
-            refreshedNews = repository.getRefreshedNews(repository.getCountry(), query);
+            refreshedNews = repository.getCountry()
+                    .flatMapObservable(country -> repository.getRefreshedNews(country.getAbbreviation(), query));
         }
         return refreshedNews;
     }
@@ -55,7 +61,7 @@ public class NewsInteractor {
         repository.setCategory(category);
     }
 
-    public String getCountry() {
+    public Single<Country> getCountry() {
         return repository.getCountry();
     }
 
@@ -63,4 +69,11 @@ public class NewsInteractor {
         repository.setCountry(country);
     }
 
+    public Completable insertDefaultCountries() {
+        return repository.insertDefaultCountries();
+    }
+
+    public void clearCountries() {
+        repository.clearCountries();
+    }
 }

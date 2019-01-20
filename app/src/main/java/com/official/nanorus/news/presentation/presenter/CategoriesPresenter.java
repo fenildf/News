@@ -38,15 +38,18 @@ public class CategoriesPresenter {
 
     public void bindView(ICategoriesView view) {
         this.view = view;
-        Single<List<Category>> categoriesSingle = categoriesInteractor.getCategories();
-        categoriesDisposable = categoriesSingle.subscribeOn(Schedulers.io())
+        getCategories();
+        getNews();
+    }
+
+    public void getCategories() {
+        Log.d(TAG, "getCategories()");
+        categoriesDisposable = categoriesInteractor.getCategories().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         view::setCategories,
                         throwable -> Log.d(TAG, throwable.getMessage()));
-        getNews();
     }
-
 
     public void getRefreshedNews(String query) {
         Log.d(TAG, "getRefreshedNews()");

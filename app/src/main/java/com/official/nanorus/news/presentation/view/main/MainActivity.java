@@ -1,5 +1,7 @@
 package com.official.nanorus.news.presentation.view.main;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
 import com.official.nanorus.news.R;
@@ -20,7 +23,6 @@ import com.official.nanorus.news.entity.data.categories.Category;
 import com.official.nanorus.news.model.data.TextUtils;
 import com.official.nanorus.news.model.repository.CategoriesRepository;
 import com.official.nanorus.news.presentation.presenter.MainPresenter;
-import com.official.nanorus.news.presentation.ui.adapters.CategoriesRecyclerViewAdapter;
 import com.official.nanorus.news.presentation.view.categories.CategoriesFragment;
 import com.official.nanorus.news.presentation.view.news.NewsFragment;
 
@@ -38,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
     public static final int FRAGMENT_NEWS = 1;
     public static final String FRAGMENT_NEWS_TAG = "news";
     public static final int MENU_ITEM_MAIN = 0;
+    public static final int MENU_ITEM_CATEGORIES = 1;
+    public static final int MENU_ITEM_SETTINGS = 20;
 
     public static String ATTACHED_FRAGMENT_KEY = "fragment";
 
@@ -74,6 +78,9 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
         newsFragment = new NewsFragment();
         presenter = new MainPresenter();
         categoriesRepository = new CategoriesRepository();
+
+        presenter.bindView(this);
+        presenter.startWork();
 
         setupNavigationDrawer();
     }
@@ -140,38 +147,50 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 supportInvalidateOptionsMenu();
+                hideKeyboard();
             }
 
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 supportInvalidateOptionsMenu();
+                hideKeyboard();
             }
         };
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerLayout.setDrawerListener(drawerToggle);
 
-        presenter.onNewsCategoriesMenuCreate();
-
         navigationView.setNavigationItemSelectedListener(item -> {
             presenter.saveMenuState(selectedMenuItem);
-            if (item.getItemId() == MENU_ITEM_MAIN) {
-                selectedMenuItem = FRAGMENT_CATEGORIES;
-                presenter.onMainMenuItemClicked();
-            } else {
-                selectedMenuItem = FRAGMENT_NEWS;
-                presenter.onNewsCategoryMenuItemClicked(item.getItemId());
+            switch (item.getItemId()) {
+                case MENU_ITEM_MAIN:
+                    selectedMenuItem = MENU_ITEM_MAIN;
+                    presenter.onMainMenuItemClicked();
+                    break;
+                case MENU_ITEM_SETTINGS:
+                    selectedMenuItem = MENU_ITEM_SETTINGS;
+                    presenter.onSettingsMenuItemClicked();
+                    break;
+                default:
+                    selectedMenuItem = MENU_ITEM_CATEGORIES;
+                    presenter.onNewsCategoryMenuItemClicked(item.getItemId());
+                    break;
             }
-
             drawerLayout.closeDrawers();
             return false;
         });
     }
 
+    public void hideKeyboard(){
+        InputMethodManager inputMethodManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+    }
+
     @Override
-    public void setMenuNewsCategories(List<Category> categories) {
+    public void setupNavigationMenu(List<Category> categories) {
         final Menu menu = navigationView.getMenu();
-        menu.add(0, 0, 0, R.string.main_page);
+        menu.add(0, MENU_ITEM_MAIN, 0, R.string.main_page);
         final SubMenu subMenu = menu.addSubMenu(R.string.news_categories);
         for (int i = 1; i < categories.size(); i++) {
             Category category = categories.get(i);
@@ -179,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
             categoryName = TextUtils.uppercaseFirstCharacter(categoryName);
             subMenu.add(0, category.getId(), i, categoryName);
         }
+        menu.add(MENU_ITEM_SETTINGS, MENU_ITEM_SETTINGS, 0, R.string.settings);
     }
 
     @Override
@@ -189,6 +209,11 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
     @Override
     public void setToolbarButtonArray() {
 
+    }
+
+    @Override
+    public Activity getActivity() {
+        return this;
     }
 
     @Override
