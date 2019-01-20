@@ -17,11 +17,9 @@ import com.official.nanorus.news.entity.data.categories.Category;
 import com.official.nanorus.news.entity.data.news.News;
 import com.official.nanorus.news.model.data.TextUtils;
 import com.official.nanorus.news.presentation.presenter.CategoriesPresenter;
-import com.official.nanorus.news.presentation.ui.Toaster;
 import com.official.nanorus.news.presentation.ui.adapters.CategoriesRecyclerViewAdapter;
 import com.official.nanorus.news.presentation.ui.adapters.NewsRecyclerViewAdapter;
 import com.official.nanorus.news.presentation.view.main.IMainView;
-import com.official.nanorus.news.presentation.view.main.MainActivity;
 
 import java.util.List;
 
@@ -46,6 +44,12 @@ public class CategoriesFragment extends Fragment implements ICategoriesView, Cat
     private NewsRecyclerViewAdapter newsAdapter;
 
     private CategoriesPresenter presenter;
+
+    public interface CategoriesListener {
+        void setTitle(String title);
+
+        void setSelectedFragment(Category category);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -124,8 +128,19 @@ public class CategoriesFragment extends Fragment implements ICategoriesView, Cat
             mainView.setTitle(TextUtils.uppercaseFirstCharacter(category.getName()));
             mainView.showNews();
         }
+
+        if (getActivity() instanceof CategoriesListener){
+            CategoriesListener categoriesListener = (CategoriesListener) getActivity();
+            categoriesListener.setSelectedFragment(category);
+        }
     }
 
+    @Override
+    public void setTitle(String title) {
+        if (getActivity() instanceof CategoriesListener) {
+            ((CategoriesListener) getActivity()).setTitle(title);
+        }
+    }
 
     @Override
     public void onCategoryClicked(Category category) {

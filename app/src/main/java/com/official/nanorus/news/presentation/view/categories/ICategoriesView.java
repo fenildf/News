@@ -20,4 +20,6 @@ public interface ICategoriesView {
     void scrollToTop();
 
     void showNewsPage(Category category);
+
+    void setTitle(String title);
 }

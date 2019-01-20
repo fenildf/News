@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -29,6 +28,7 @@ public class CategoriesPresenter {
     private Observable<News> newsObservable;
     private Disposable newsDisponsable;
     private ResourceManager resourceManager;
+    private Disposable setCategoryTitleDisposable;
 
     public CategoriesPresenter() {
         newsInteractor = new NewsInteractor();
@@ -85,7 +85,7 @@ public class CategoriesPresenter {
 
     public void getNews() {
         Log.d(TAG, "getNews()");
-        view.showLoading(true);
+        showLoading(true);
 
         newsObservable = newsInteractor.getNews(null);
         if (newsDisponsable != null && !newsDisponsable.isDisposed()) {
@@ -103,7 +103,7 @@ public class CategoriesPresenter {
                 },
                 () -> {
                     view.clearNewsList();
-                    view.showLoading(false);
+                    showLoading(false);
                     if (!newsList.isEmpty()) {
                         view.updateNewsList(newsList);
                     } else {
@@ -111,6 +111,19 @@ public class CategoriesPresenter {
                     }
                 }
         );
+    }
+
+    public void setCategoryTitle() {
+        setCategoryTitleDisposable = newsInteractor.getCategory().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(category -> view.setTitle(category.getName()), throwable -> Log.d(TAG, throwable.getMessage()));
+    }
+
+    public void showLoading(boolean show){
+        view.showLoading(show);
+        if (show){
+        } else {
+            setCategoryTitle();
+        }
     }
 
     public void onCategoryClicked(Category category) {

@@ -26,6 +26,7 @@ public class NewsPresenter {
     private Observable<News> newsObservable;
     private Disposable newsDisponsable;
     private ResourceManager resourceManager;
+    private Disposable setCategoryTitleDisposable;
 
     public NewsPresenter() {
         interactor = new NewsInteractor();
@@ -38,17 +39,23 @@ public class NewsPresenter {
     }
 
     public void releasePresenter() {
-        view = null;
-        interactor = null;
         if (newsDisponsable != null && !newsDisponsable.isDisposed()) {
             newsDisponsable.dispose();
         }
+        if (setCategoryTitleDisposable != null && !setCategoryTitleDisposable.isDisposed()) {
+            setCategoryTitleDisposable.dispose();
+        }
+        newsDisponsable = null;
+        setCategoryTitleDisposable = null;
+        view = null;
+        interactor = null;
+
     }
 
 
     public void getRefreshedNews(String query) {
         Log.d(TAG, "getRefreshedNews()");
-        view.showLoading(true);
+        showLoading(true);
         newsObservable = interactor.getRefreshedNews(query, true);
         List<News> newsList = new ArrayList<>();
         newsDisponsable = newsObservable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -58,7 +65,7 @@ public class NewsPresenter {
                         },
                         throwable -> {
                             Log.d(TAG, throwable.getMessage());
-                            view.showLoading(false);
+                            showLoading(false);
                             if (Utils.checkNetworkError(throwable)) {
                                 Toaster.shortToast(resourceManager.getStringNoInternet());
                                 getNews();
@@ -71,16 +78,29 @@ public class NewsPresenter {
                             view.clearNewsList();
                             view.updateNewsList(newsList);
                             view.showNoNews(newsList.isEmpty());
-                            view.showLoading(false);
+                            showLoading(false);
                             interactor.setQuery(query);
                             interactor.saveNews(newsList);
                         }
                 );
     }
 
+    public void setCategoryTitle() {
+        setCategoryTitleDisposable = interactor.getCategory().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(category -> view.setTitle(category.getName()), throwable -> Log.d(TAG, throwable.getMessage()));
+    }
+    
+    public void showLoading(boolean show){
+        view.showLoading(show);
+        if (show){
+        } else {
+            setCategoryTitle();
+        }
+    }
+
     public void getNews() {
         Log.d(TAG, "getNews()");
-        view.showLoading(true);
+        showLoading(true);
 
         newsObservable = interactor.getCategory().flatMapObservable(category -> interactor.getNews(category));
         if (newsDisponsable != null && !newsDisponsable.isDisposed()) {
@@ -94,11 +114,11 @@ public class NewsPresenter {
                 },
                 throwable -> {
                     Log.d(TAG, throwable.getMessage());
-                    view.showLoading(false);
+                    showLoading(false);
                 },
                 () -> {
                     view.clearNewsList();
-                    view.showLoading(false);
+                    showLoading(false);
                     if (!newsList.isEmpty()) {
                         view.updateNewsList(newsList);
                     } else {
@@ -109,7 +129,6 @@ public class NewsPresenter {
     }
 
     public void onQueryEntered(String query) {
-        interactor.setCountry("ru");
         getRefreshedNews(query);
     }
 

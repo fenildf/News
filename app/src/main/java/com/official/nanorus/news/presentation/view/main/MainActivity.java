@@ -31,7 +31,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements IMainView, NewsFragment.NewsListener {
+public class MainActivity extends AppCompatActivity implements IMainView, NewsFragment.NewsListener, CategoriesFragment.CategoriesListener {
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
     public static final int MENU_ITEM_SETTINGS = 20;
 
     public static String ATTACHED_FRAGMENT_KEY = "fragment";
+    public static String SELECTED_MENU_ITEM_KEY = "menu_item";
+    public static String SELECTED_CATEGORY_KEY = "category";
 
     @BindView(R.id.frame)
     FrameLayout frameLayout;
@@ -61,7 +63,8 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
     CategoriesFragment categoriesFragment;
     NewsFragment newsFragment;
 
-    private int selectedMenuItem = 0;
+    private int selectedMenuItem = -1;
+    private int selectedCategory = -1;
     private int attachedFragment = -1;
 
     @Override
@@ -72,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
 
         if (savedInstanceState != null) {
             attachedFragment = savedInstanceState.getInt(ATTACHED_FRAGMENT_KEY);
+            selectedMenuItem = savedInstanceState.getInt(SELECTED_MENU_ITEM_KEY);
+            selectedCategory = savedInstanceState.getInt(SELECTED_CATEGORY_KEY);
         }
 
         categoriesFragment = new CategoriesFragment();
@@ -80,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
         categoriesRepository = new CategoriesRepository();
 
         presenter.bindView(this);
-        presenter.startWork();
+        presenter.startWork(selectedMenuItem, selectedCategory);
 
         setupNavigationDrawer();
     }
@@ -168,11 +173,11 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
                     presenter.onMainMenuItemClicked();
                     break;
                 case MENU_ITEM_SETTINGS:
-                    selectedMenuItem = MENU_ITEM_SETTINGS;
                     presenter.onSettingsMenuItemClicked();
                     break;
                 default:
                     selectedMenuItem = MENU_ITEM_CATEGORIES;
+                    selectedCategory = item.getItemId();
                     presenter.onNewsCategoryMenuItemClicked(item.getItemId());
                     break;
             }
@@ -225,6 +230,8 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(ATTACHED_FRAGMENT_KEY, attachedFragment);
+        outState.putInt(SELECTED_MENU_ITEM_KEY, selectedMenuItem);
+        outState.putInt(SELECTED_CATEGORY_KEY, selectedCategory);
     }
 
     @Override
@@ -243,6 +250,12 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
     @Override
     public void setTitle(String title) {
         getSupportActionBar().setTitle(title);
+    }
+
+    @Override
+    public void setSelectedFragment(Category category) {
+        selectedMenuItem = MENU_ITEM_CATEGORIES;
+        selectedCategory = category.getId();
     }
 
 }

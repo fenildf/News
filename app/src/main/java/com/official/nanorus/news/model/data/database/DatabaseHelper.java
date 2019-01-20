@@ -46,10 +46,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             sqLiteDatabase.execSQL(categoriesDatabaseContract.SQL_CREATE_TABLE_CATEGORIES);
         if (oldVersion < 5)
             sqLiteDatabase.execSQL("ALTER TABLE " + newsDatabaseContract.TABLE_NAME_NEWS + " ADD " + newsDatabaseContract.COLUMN_NAME_NEWS_CATEGORY);
+        if (oldVersion < 6)
+            sqLiteDatabase.execSQL("ALTER TABLE " + newsDatabaseContract.TABLE_NAME_COUNTRIES + " ADD " + newsDatabaseContract.COLUMN_NAME_COUNTRIES_LANG);
         if (oldVersion < 7)
             sqLiteDatabase.execSQL(newsDatabaseContract.SQL_CREATE_TABLE_COUNTRIES);
         if (oldVersion < 8) {
-            sqLiteDatabase.execSQL("ALTER TABLE " + newsDatabaseContract.TABLE_NAME_COUNTRIES + " ADD " + newsDatabaseContract.COLUMN_NAME_COUNTRIES_LANG);
             sqLiteDatabase.execSQL("ALTER TABLE " + categoriesDatabaseContract.TABLE_NAME_CATEGORIES + " ADD " + categoriesDatabaseContract.COLUMN_NAME_CATEGORY_DEFAULT_NAME);
             sqLiteDatabase.execSQL("ALTER TABLE " + categoriesDatabaseContract.TABLE_NAME_CATEGORIES + " ADD " + categoriesDatabaseContract.COLUMN_NAME_CATEGORY_LANG);
         }

@@ -9,8 +9,8 @@ import com.official.nanorus.news.model.domain.LaunchInteractor;
 import com.official.nanorus.news.model.domain.MainInteractor;
 import com.official.nanorus.news.model.domain.NewsInteractor;
 import com.official.nanorus.news.navigation.Router;
-import com.official.nanorus.news.presentation.ui.Toaster;
 import com.official.nanorus.news.presentation.view.main.IMainView;
+import com.official.nanorus.news.presentation.view.main.MainActivity;
 
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -46,7 +46,7 @@ public class MainPresenter {
         this.view = view;
     }
 
-    public void startWork() {
+    public void startWork(int selectedMenuItem, int selectedCategory) {
         //launchInteractor.setAppFirstStarted(true);
         if (launchInteractor.isAppFirstStarted()) {
             categoriesInteractor.clearCategories();
@@ -57,15 +57,20 @@ public class MainPresenter {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(() -> {
-                        Toaster.shortToast("first launch. default data inserted");
                         launchInteractor.setAppFirstStarted(false);
-                        setupNavigationMenu();
-                        onCategoriesMenuItemClicked();
+                        start(selectedMenuItem, selectedCategory);
                     });
         } else {
-            setupNavigationMenu();
-            onCategoriesMenuItemClicked();
+            start(selectedMenuItem, selectedCategory);
         }
+    }
+
+    private void start(int selectedMenuItem, int selectedCategory){
+        setupNavigationMenu();
+        if (selectedMenuItem == MainActivity.MENU_ITEM_CATEGORIES) {
+            onNewsCategoryMenuItemClicked(selectedCategory);
+        } else
+            onCategoriesMenuItemClicked();
     }
 
     public void onNewsMenuItemClicked() {
