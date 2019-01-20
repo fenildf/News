@@ -2,7 +2,6 @@ package com.official.nanorus.news.presentation.presenter;
 
 import android.util.Log;
 
-import com.official.nanorus.news.entity.data.categories.Category;
 import com.official.nanorus.news.model.data.ResourceManager;
 import com.official.nanorus.news.model.data.TextUtils;
 import com.official.nanorus.news.model.domain.CategoriesInteractor;
@@ -13,14 +12,9 @@ import com.official.nanorus.news.navigation.Router;
 import com.official.nanorus.news.presentation.ui.Toaster;
 import com.official.nanorus.news.presentation.view.main.IMainView;
 
-import java.lang.reflect.AccessibleObject;
-import java.util.List;
-
 import io.reactivex.Completable;
-import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainPresenter {

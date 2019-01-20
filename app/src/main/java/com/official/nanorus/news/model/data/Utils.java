@@ -9,7 +9,6 @@ import android.util.Log;
 import android.util.TypedValue;
 
 import com.official.nanorus.news.app.App;
-import com.official.nanorus.news.presentation.ui.Toaster;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -72,7 +71,10 @@ public class Utils {
         return uiDate;
     }
 
-    public static String getAppLanguage(){
-        return Locale.getDefault().getLanguage();
+    public static String getAppLanguage() {
+        String lang = Locale.getDefault().getLanguage();
+        if (lang.equals("uk"))
+            lang = "ua";
+        return lang;
     }
 }

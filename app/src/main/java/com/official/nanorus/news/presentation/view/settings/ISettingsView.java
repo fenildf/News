@@ -11,9 +11,6 @@ public interface ISettingsView {
 
     void setCountry(String country);
 
-    void setLanguage(String language);
-
     void openCountryChoosingDialog(List<Country> countries);
 
-    void openLanguageChoosingDialog();
 }

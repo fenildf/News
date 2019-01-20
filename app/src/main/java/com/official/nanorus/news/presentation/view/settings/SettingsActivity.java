@@ -26,8 +26,6 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
 
     @BindView(R.id.tv_country)
     TextView countryTextView;
-    @BindView(R.id.tv_language)
-    TextView languageTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +44,7 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
 
     @OnClick({R.id.tv_country_title, R.id.tv_country})
     void onCountryClick() {
-        Toaster.shortToast("country");
         presenter.onCountryClicked();
-    }
-
-    @OnClick({R.id.tv_language_title, R.id.tv_language})
-    void onLanguageClick() {
-        Toaster.shortToast("language");
-
     }
 
     @Override
@@ -78,11 +69,6 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
     }
 
     @Override
-    public void setLanguage(String language) {
-        languageTextView.setText(language);
-    }
-
-    @Override
     public void openCountryChoosingDialog(List<Country> countries) {
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
         builderSingle.setTitle(R.string.select_country_of_news);
@@ -103,11 +89,6 @@ public class SettingsActivity extends AppCompatActivity implements ISettingsView
 
         });
         builderSingle.show();
-    }
-
-    @Override
-    public void openLanguageChoosingDialog() {
-
     }
 
     @Override

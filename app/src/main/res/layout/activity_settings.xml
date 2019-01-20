@@ -37,27 +37,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_country" />
 
-    <TextView
-        android:id="@+id/tv_language_title"
-        style="@style/PrimaryTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="8dp"
-        android:paddingLeft="8dp"
-        android:paddingTop="8dp"
-        android:text="@string/language"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_country" />
-
-    <TextView
-        android:id="@+id/tv_language"
-        style="@style/SecondarySmallTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="8dp"
-        android:paddingLeft="8dp"
-        android:paddingBottom="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_language_title"
-        tools:text="@string/russian" />
 </android.support.constraint.ConstraintLayout>

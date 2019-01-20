@@ -10,10 +10,8 @@ import com.official.nanorus.news.presentation.view.settings.ISettingsView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ScheduledExecutorService;
 
 import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -35,7 +33,6 @@ public class SettingsPresenter {
 
     public void bindView(ISettingsView view) {
         this.view = view;
-        view.setLanguage("Russian");
         view.setCountry("Russian Federation");
 
         countryDisposable = interactor.getCountry().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -69,15 +66,14 @@ public class SettingsPresenter {
         view.setCountry(country.getName());
     }
 
-    public void onLanguageSelected(String language) {
-
-    }
-
     public void releasePresenter() {
         if (countriesDisposable != null && !countriesDisposable.isDisposed())
             countriesDisposable.dispose();
+        if (countryDisposable != null && !countryDisposable.isDisposed())
+            countryDisposable.dispose();
         countriesDisposable = null;
         countriesObservable = null;
+        countryDisposable = null;
         view = null;
         router = null;
         interactor = null;
