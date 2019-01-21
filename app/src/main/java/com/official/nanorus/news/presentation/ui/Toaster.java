@@ -14,4 +14,11 @@ public class Toaster {
         Toast.makeText(App.getApp(), App.getApp().getText(resTextId), Toast.LENGTH_SHORT).show();
     }
 
+    public static void longToast(int resTextId) {
+        Toast.makeText(App.getApp(), App.getApp().getText(resTextId), Toast.LENGTH_LONG).show();
+    }
+
+    public static void longToast(String text) {
+        Toast.makeText(App.getApp(), text, Toast.LENGTH_LONG).show();
+    }
 }

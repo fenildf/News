@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
             newsFragment = (NewsFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_NEWS_TAG);
             newsFragment.setSearchQuery("");
         }
+        setToolbarButtonArray();
     }
 
 
@@ -129,7 +130,14 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
         if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                presenter.onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -163,6 +171,8 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
             }
         };
         drawerToggle.setDrawerIndicatorEnabled(true);
+        if (attachedFragment == FRAGMENT_NEWS)
+            setToolbarButtonArray();
         drawerLayout.addDrawerListener(drawerToggle);
         drawerLayout.setDrawerListener(drawerToggle);
 
@@ -187,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
         });
     }
 
-    public void hideKeyboard(){
+    public void hideKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager)
                 getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
@@ -208,13 +218,22 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
     }
 
     @Override
-    public void setToolbarButtonHamburger() {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
 
+    @Override
+    public void setToolbarButtonHamburger() {
+        if (drawerToggle != null)
+            drawerToggle.setDrawerIndicatorEnabled(true);
     }
 
     @Override
     public void setToolbarButtonArray() {
-
+        if (drawerToggle != null) {
+            drawerToggle.setDrawerIndicatorEnabled(false);
+            drawerToggle.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp);
+        }
     }
 
     @Override
@@ -257,6 +276,11 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
     public void setSelectedFragment(Category category) {
         selectedMenuItem = MENU_ITEM_CATEGORIES;
         selectedCategory = category.getId();
+    }
+
+    @Override
+    public void onBackPressed() {
+       presenter.onBackPressed();
     }
 
 }

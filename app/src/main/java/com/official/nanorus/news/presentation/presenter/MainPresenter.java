@@ -54,7 +54,8 @@ public class MainPresenter {
     }
 
     public void startWork(int selectedMenuItem, int selectedCategory) {
-        launchInteractor.setAppFirstStarted(FIRST_LAUNCH_TEST);
+        if (FIRST_LAUNCH_TEST)
+            launchInteractor.setAppFirstStarted(true);
         if (launchInteractor.isAppFirstStarted()) {
             categoriesInteractor.clearCategories();
             newsInteractor.clearCountries();
@@ -87,17 +88,22 @@ public class MainPresenter {
     private void start(int selectedMenuItem, int selectedCategory) {
         setupNavigationMenu();
         if (selectedMenuItem == MainActivity.MENU_ITEM_CATEGORIES) {
+            view.setToolbarButtonArray();
             onNewsCategoryMenuItemClicked(selectedCategory);
-        } else
+        } else {
+            view.setToolbarButtonHamburger();
             onCategoriesMenuItemClicked();
+        }
     }
 
     public void onNewsMenuItemClicked() {
+        view.setToolbarButtonArray();
         newsInteractor.setQuery("");
         view.showNews();
     }
 
     public void onCategoriesMenuItemClicked() {
+        view.setToolbarButtonHamburger();
         newsInteractor.deleteNewsCategory();
         newsInteractor.setQuery("");
         view.setTitle(resourceManager.getStringAppName());
@@ -150,5 +156,9 @@ public class MainPresenter {
 
     public void onSettingsMenuItemClicked() {
         router.openSettingsView(view.getActivity());
+    }
+
+    public void onBackPressed() {
+        onCategoriesMenuItemClicked();
     }
 }

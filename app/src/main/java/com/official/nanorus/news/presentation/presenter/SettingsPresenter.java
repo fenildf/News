@@ -33,8 +33,6 @@ public class SettingsPresenter {
 
     public void bindView(ISettingsView view) {
         this.view = view;
-        view.setCountry("Russian Federation");
-
         countryDisposable = interactor.getCountry().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(country -> view.setCountry(country.getName()), throwable -> {
                     Log.d(TAG, throwable.getMessage());
@@ -61,7 +59,6 @@ public class SettingsPresenter {
     }
 
     public void onCountrySelected(Country country) {
-        Toaster.shortToast("Country selected: " + country.getName());
         interactor.saveCountry(country);
         view.setCountry(country.getName());
     }

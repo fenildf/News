@@ -64,7 +64,7 @@ public class NewsFragment extends Fragment implements INewsView {
     }
 
     private void initViews() {
-        swipeRefreshLayout.setOnRefreshListener(() -> presenter.onSwipeRefresh());
+        swipeRefreshLayout.setOnRefreshListener(() -> presenter.onRefresh());
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(android.R.color.holo_red_light),
                 getResources().getColor(android.R.color.holo_orange_light),
                 getResources().getColor(android.R.color.holo_blue_light));
@@ -113,12 +113,6 @@ public class NewsFragment extends Fragment implements INewsView {
     public void getNews() {
         if (presenter != null)
             presenter.getRefreshedNews("");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        presenter.onViewResume();
     }
 
     @Override

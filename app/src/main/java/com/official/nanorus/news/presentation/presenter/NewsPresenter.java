@@ -29,6 +29,8 @@ public class NewsPresenter {
     private ResourceManager resourceManager;
     private Disposable setCategoryTitleDisposable;
 
+    private boolean isNoInternet = false;
+
     public NewsPresenter() {
         interactor = new NewsInteractor();
         resourceManager = new ResourceManager();
@@ -68,8 +70,11 @@ public class NewsPresenter {
                             Log.d(TAG, throwable.getMessage());
                             showLoading(false);
                             if (Utils.checkNetworkError(throwable)) {
-                                Toaster.shortToast(resourceManager.getStringNoInternet());
-                                getNews();
+                                if (!isNoInternet) {
+                                    Toaster.longToast(resourceManager.getStringNoInternet());
+                                    isNoInternet = true;
+                                    getNews();
+                                }
                             } else {
                                 Toaster.shortToast(throwable.getMessage());
                             }
@@ -134,13 +139,8 @@ public class NewsPresenter {
         getRefreshedNews(query);
     }
 
-    public void onSwipeRefresh() {
+    public void onRefresh() {
+        isNoInternet = false;
         getRefreshedNews(interactor.getQuery());
-    }
-
-    public void onViewResume() {
-        String query = interactor.getQuery();
-       /* if (query != null && !query.equals(""))
-            view.setTitle(resourceManager.getStringNews() + ": " + interactor.getQuery());*/
     }
 }

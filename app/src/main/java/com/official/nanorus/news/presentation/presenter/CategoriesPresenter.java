@@ -31,6 +31,7 @@ public class CategoriesPresenter {
     private ResourceManager resourceManager;
     private Disposable setCategoryTitleDisposable;
 
+    private boolean isNoInternet = false;
     public CategoriesPresenter() {
         newsInteractor = new NewsInteractor();
         resourceManager = new ResourceManager();
@@ -66,8 +67,11 @@ public class CategoriesPresenter {
                             Log.d(TAG, throwable.getMessage());
                             view.showLoading(false);
                             if (Utils.checkNetworkError(throwable)) {
-                                Toaster.shortToast(resourceManager.getStringNoInternet());
-                                getNews();
+                                if (!isNoInternet) {
+                                    Toaster.longToast(resourceManager.getStringNoInternet());
+                                    isNoInternet = true;
+                                    getNews();
+                                }
                             } else {
                                 Toaster.shortToast(throwable.getMessage());
                             }
@@ -139,10 +143,16 @@ public class CategoriesPresenter {
             categoriesDisposable.dispose();
         if (newsDisponsable != null && !newsDisponsable.isDisposed())
             newsDisponsable.dispose();
+        if (setCategoryTitleDisposable != null && !setCategoryTitleDisposable.isDisposed())
+            setCategoryTitleDisposable.dispose();
+        categoriesDisposable = null;
+        newsDisponsable = null;
+        setCategoryTitleDisposable = null;
         view = null;
     }
 
     public void onRefresh() {
+        isNoInternet = false;
         getRefreshedNews("");
     }
 }
