@@ -11,7 +11,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.official.nanorus.contacts"
+        applicationId "com.official.nanorus.news"
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
