@@ -76,4 +76,8 @@ public class NewsInteractor {
     public void clearCountries() {
         repository.clearCountries();
     }
+
+    public void deleteNewsCategory() {
+        repository.deleteNewsCategory();
+    }
 }

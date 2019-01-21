@@ -20,4 +20,5 @@
     <string name="russian">Русский</string>
     <string name="select_country_of_news">Выберите страну</string>
     <string name="close">Закрыть</string>
+    <string name="defaultCountry">ru</string>
 </resources>

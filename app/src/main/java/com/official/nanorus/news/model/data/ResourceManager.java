@@ -1,7 +1,6 @@
 package com.official.nanorus.news.model.data;
 
 import android.content.Context;
-import android.net.Uri;
 
 import com.official.nanorus.news.R;
 import com.official.nanorus.news.app.App;
@@ -41,4 +40,7 @@ public class ResourceManager {
         }
     }
 
+    public String getStringDefaultCountry() {
+        return context.getString(R.string.defaultCountry);
+    }
 }

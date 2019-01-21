@@ -2,17 +2,20 @@ package com.official.nanorus.news.presentation.presenter;
 
 import android.util.Log;
 
+import com.official.nanorus.news.entity.data.ip.Ip;
 import com.official.nanorus.news.model.data.ResourceManager;
 import com.official.nanorus.news.model.data.TextUtils;
 import com.official.nanorus.news.model.domain.CategoriesInteractor;
 import com.official.nanorus.news.model.domain.LaunchInteractor;
 import com.official.nanorus.news.model.domain.MainInteractor;
 import com.official.nanorus.news.model.domain.NewsInteractor;
+import com.official.nanorus.news.model.domain.SettingsInteractor;
 import com.official.nanorus.news.navigation.Router;
 import com.official.nanorus.news.presentation.view.main.IMainView;
 import com.official.nanorus.news.presentation.view.main.MainActivity;
 
 import io.reactivex.Completable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -22,24 +25,28 @@ public class MainPresenter {
     private final String TAG = this.getClass().getSimpleName();
 
     private IMainView view;
-    private NewsInteractor newsInteractor;
     private MainInteractor mainInteractor;
-    private ResourceManager resourceManager;
+    private NewsInteractor newsInteractor;
+    private SettingsInteractor settingsInteractor;
     private CategoriesInteractor categoriesInteractor;
-    private Router router;
+    private ResourceManager resourceManager;
     private LaunchInteractor launchInteractor;
+    private Router router;
 
     private Disposable menuCategoriesDisposable;
     private Disposable newsCategoryDisposable;
     private Disposable launchDisposable;
 
+    private static final boolean FIRST_LAUNCH_TEST = false;
+
     public MainPresenter() {
-        newsInteractor = new NewsInteractor();
-        resourceManager = new ResourceManager();
         mainInteractor = new MainInteractor();
+        newsInteractor = new NewsInteractor();
+        settingsInteractor = new SettingsInteractor();
         categoriesInteractor = new CategoriesInteractor();
-        router = Router.getInstance();
         launchInteractor = new LaunchInteractor();
+        resourceManager = new ResourceManager();
+        router = Router.getInstance();
     }
 
     public void bindView(IMainView view) {
@@ -47,17 +54,29 @@ public class MainPresenter {
     }
 
     public void startWork(int selectedMenuItem, int selectedCategory) {
-        //launchInteractor.setAppFirstStarted(true);
+        launchInteractor.setAppFirstStarted(FIRST_LAUNCH_TEST);
         if (launchInteractor.isAppFirstStarted()) {
             categoriesInteractor.clearCategories();
             newsInteractor.clearCountries();
             Completable categoriesCompletable = categoriesInteractor.insertDefaultCategories();
             Completable countriesCompletable = newsInteractor.insertDefaultCountries();
+            Single<Ip> ipSingle = launchInteractor.getIp();
             launchDisposable = categoriesCompletable.andThen(countriesCompletable)
+                    .andThen(ipSingle)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(() -> {
+                    .flatMap(ip -> {
+                        String countryCode = ip.getCountryCode().toLowerCase();
+                        return launchInteractor.getCountry(countryCode);
+                    })
+                    .subscribe(country -> {
                         launchInteractor.setAppFirstStarted(false);
+                        newsInteractor.setCountry(country.getAbbreviation());
+                        start(selectedMenuItem, selectedCategory);
+                    }, throwable -> {
+                        Log.d(TAG, throwable.getMessage());
+                        launchInteractor.setAppFirstStarted(false);
+                        newsInteractor.setCountry(resourceManager.getStringDefaultCountry());
                         start(selectedMenuItem, selectedCategory);
                     });
         } else {
@@ -65,7 +84,7 @@ public class MainPresenter {
         }
     }
 
-    private void start(int selectedMenuItem, int selectedCategory){
+    private void start(int selectedMenuItem, int selectedCategory) {
         setupNavigationMenu();
         if (selectedMenuItem == MainActivity.MENU_ITEM_CATEGORIES) {
             onNewsCategoryMenuItemClicked(selectedCategory);
@@ -78,6 +97,7 @@ public class MainPresenter {
     }
 
     public void onCategoriesMenuItemClicked() {
+        newsInteractor.deleteNewsCategory();
         view.setTitle(resourceManager.getStringAppName());
         view.showCategories();
     }

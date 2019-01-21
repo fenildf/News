@@ -91,4 +91,12 @@ public class AppPreferencesManager {
     public void setNewsCountry(String country) {
         putString("news_country", country);
     }
+
+    public void deleteNewsCategory() {
+        delete("news_category");
+    }
+
+    public void delete (String name){
+        preferences.edit().remove(name).apply();
+    }
 }

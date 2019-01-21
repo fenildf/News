@@ -15,8 +15,6 @@ import com.official.nanorus.news.model.data.database.news.NewsDatabaseManager;
 import java.util.List;
 
 import io.reactivex.Completable;
-import io.reactivex.CompletableEmitter;
-import io.reactivex.CompletableOnSubscribe;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.functions.Function;
@@ -120,5 +118,9 @@ public class NewsRepository {
 
     public void clearCountries(){
         newsDatabaseManager.clearCountries();
+    }
+
+    public void deleteNewsCategory() {
+        preferencesManager.deleteNewsCategory();
     }
 }

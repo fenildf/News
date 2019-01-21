@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.official.nanorus.news.R;
 import com.official.nanorus.news.entity.data.categories.Category;
@@ -36,8 +35,6 @@ public class CategoriesFragment extends Fragment implements ICategoriesView, Cat
     RecyclerView newsRecyclerView;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.tv_refresh)
-    TextView swipeRefreshTextView;
     private RecyclerView.LayoutManager categoriesLayoutManager;
     private CategoriesRecyclerViewAdapter categoriesAdapter;
     private RecyclerView.LayoutManager newsLayoutManager;
@@ -111,9 +108,9 @@ public class CategoriesFragment extends Fragment implements ICategoriesView, Cat
     public void showLoading(boolean show) {
         swipeRefreshLayout.setRefreshing(show);
         if (show)
-            swipeRefreshTextView.setVisibility(View.VISIBLE);
+            setTitle(getString(R.string.loading));
         else
-            swipeRefreshTextView.setVisibility(View.INVISIBLE);
+            setTitle(getString(R.string.app_name));
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.util.Log;
 import com.official.nanorus.news.entity.data.categories.Category;
 import com.official.nanorus.news.entity.data.news.News;
 import com.official.nanorus.news.model.data.ResourceManager;
+import com.official.nanorus.news.model.data.TextUtils;
 import com.official.nanorus.news.model.data.Utils;
 import com.official.nanorus.news.model.domain.CategoriesInteractor;
 import com.official.nanorus.news.model.domain.NewsInteractor;
@@ -115,7 +116,7 @@ public class CategoriesPresenter {
 
     public void setCategoryTitle() {
         setCategoryTitleDisposable = newsInteractor.getCategory().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(category -> view.setTitle(category.getName()), throwable -> Log.d(TAG, throwable.getMessage()));
+                .subscribe(category -> view.setTitle(TextUtils.uppercaseFirstCharacter(category.getName())), throwable -> Log.d(TAG, throwable.getMessage()));
     }
 
     public void showLoading(boolean show){
