@@ -112,7 +112,7 @@ public class NewsFragment extends Fragment implements INewsView {
 
     public void getNews() {
         if (presenter != null)
-            presenter.getRefreshedNews("");
+            presenter.getNews();
     }
 
     @Override
