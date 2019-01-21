@@ -93,11 +93,13 @@ public class MainPresenter {
     }
 
     public void onNewsMenuItemClicked() {
+        newsInteractor.setQuery("");
         view.showNews();
     }
 
     public void onCategoriesMenuItemClicked() {
         newsInteractor.deleteNewsCategory();
+        newsInteractor.setQuery("");
         view.setTitle(resourceManager.getStringAppName());
         view.showCategories();
     }

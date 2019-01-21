@@ -81,7 +81,8 @@ public class NewsPresenter {
                             view.showNoNews(newsList.isEmpty());
                             showLoading(false);
                             interactor.setQuery(query);
-                            interactor.saveNews(newsList);
+                            if (!newsList.isEmpty())
+                                interactor.saveNews(newsList);
                         }
                 );
     }
@@ -90,10 +91,10 @@ public class NewsPresenter {
         setCategoryTitleDisposable = interactor.getCategory().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(category -> view.setTitle(TextUtils.uppercaseFirstCharacter(category.getName())), throwable -> Log.d(TAG, throwable.getMessage()));
     }
-    
-    public void showLoading(boolean show){
+
+    public void showLoading(boolean show) {
         view.showLoading(show);
-        if (show){
+        if (show) {
         } else {
             setCategoryTitle();
         }

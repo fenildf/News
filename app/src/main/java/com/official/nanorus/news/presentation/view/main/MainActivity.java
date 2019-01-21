@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements IMainView, NewsFr
             attachedFragment = FRAGMENT_NEWS;
         } else {
             newsFragment = (NewsFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_NEWS_TAG);
+            newsFragment.setSearchQuery("");
         }
     }
 

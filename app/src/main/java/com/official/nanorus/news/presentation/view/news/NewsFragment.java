@@ -41,6 +41,11 @@ public class NewsFragment extends Fragment implements INewsView {
 
     private NewsPresenter presenter;
 
+    public void setSearchQuery(String text) {
+        if (searchView != null)
+            searchView.setQuery(text, false);
+    }
+
     public interface NewsListener {
         void setTitle(String title);
     }

@@ -55,7 +55,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:iconifiedByDefault="false"
-                        android:queryHint="@string/anime"
+                        android:queryHint="@string/search"
                         app:queryBackground="@android:color/transparent" />
                 </android.support.v7.widget.CardView>
 

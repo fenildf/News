@@ -10,7 +10,6 @@
     <string name="categories">Категории</string>
 
     <string name="news_categories">Категории новостей</string>
-    <string name="anime">Аниме</string>
     <string name="loading">Загрузка..</string>
     <string name="main_page">Главная страница</string>
     <string name="settings">Настройки</string>
@@ -21,4 +20,5 @@
     <string name="select_country_of_news">Выберите страну</string>
     <string name="close">Закрыть</string>
     <string name="defaultCountry">ru</string>
+    <string name="actual">Актуальное</string>
 </resources>
